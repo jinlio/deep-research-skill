@@ -16,8 +16,8 @@ Thumbs.db
 .idea/
 
 # Python/tool caches
+/dist/
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
-

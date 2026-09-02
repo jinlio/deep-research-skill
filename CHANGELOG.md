@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0 - 2026-09-02
+
+- 将共享研究协议整理到 `core/`，为 OpenClaw、HermesAgent、Codex、OpenCode、Claude Code 和 generic 提供独立薄适配入口。
+- 新增 `build_adapters.py`，生成带 references、scripts、profiles 的自包含 runtime 安装包。
+- 新增 `test_runtime_matrix.py`，在临时目录构建并验证所有适配包及 capability fixture。
+- 保留根目录兼容入口，并扩展 release check 与 capability fixture 覆盖。
+
 ## 0.1.1 - 2026-09-02
 
 - 增加 Codex、OpenCode 和 Claude Code runtime profile 与 capability fixture。

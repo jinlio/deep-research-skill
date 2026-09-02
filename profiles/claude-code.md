@@ -1,6 +1,6 @@
 # Claude Code Capability Profile
 
-Claude Code can consume a repository `SKILL.md`/instruction bundle, use the tools enabled by the host, and run shell commands in a configured working directory. The conventional project location is `.claude/skills/deep-research/SKILL.md`; user-level installs use `~/.claude/skills/deep-research/SKILL.md`. Exact discovery and sub-agent features vary by installation, so adapters must record observed behavior rather than assume a CLI version.
+Claude Code can consume a repository `SKILL.md`/instruction bundle, use the tools enabled by the host, and run shell commands in a configured working directory. Run `python scripts/build_adapters.py --output dist`, then install `dist/claude-code/deep-research/`. The conventional project location is `.claude/skills/deep-research/SKILL.md`; user-level installs use `~/.claude/skills/deep-research/SKILL.md`. Exact discovery and sub-agent features vary by installation, so adapters must record observed behavior rather than assume a CLI version.
 
 ## Capability contract
 

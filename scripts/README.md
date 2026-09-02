@@ -12,6 +12,8 @@
 - `validate_skill`：验证 `SKILL.md` frontmatter、引用文件和路径安全。
 - `evaluate_benchmark`：对 golden cases 的 claim 覆盖、拒答和冲突召回做确定性评分。
 - `release_check`：一次性执行 skill、fixture、capability、benchmark 和单元测试验收。
+- `build_adapters`：从 `core/`、`adapters/` 和仓库级 profiles 生成各 runtime 的完整可安装包。
+- `test_runtime_matrix`：在临时目录构建并验证所有适配包与 capability fixture。
 
 统一运行：`python scripts/run_gates.py <research-run> --require-final --fail-on-pii`
 

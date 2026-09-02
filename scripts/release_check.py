@@ -5,8 +5,10 @@ from __future__ import annotations
 import argparse
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
+from build_adapters import RUNTIMES, build
 from evaluate_benchmark import evaluate
 from probe_runtime import probe
 from validate_skill import validate
@@ -24,10 +26,23 @@ def release_check(root: Path, run_dir: Path | None = None) -> dict:
     run_dir = (run_dir or root / "examples" / "minimal" / "run").resolve()
     checks: list[dict] = []
 
-    skill = validate(root)
-    checks.append({"name": "skill_bundle", "ok": skill["ok"], "details": skill})
+    skill = validate(root / "core")
+    checks.append({"name": "core_skill_bundle", "ok": skill["ok"], "details": skill})
+    compatibility = validate(root)
+    checks.append({"name": "compatibility_entry", "ok": compatibility["ok"], "details": compatibility})
 
-    for filename in ("openclaw.example.json", "hermesagent.example.json", "codex.example.json", "opencode.example.json", "claude-code.example.json"):
+    with tempfile.TemporaryDirectory(prefix="deep-research-adapters-") as temp_dir:
+        try:
+            built = build(root, Path(temp_dir))
+            checks.append({"name": "adapter_build", "ok": built["ok"], "details": built})
+            for runtime in RUNTIMES:
+                package = Path(temp_dir) / runtime / "deep-research"
+                result = validate(package)
+                checks.append({"name": f"adapter:{runtime}", "ok": result["ok"], "details": result})
+        except Exception as exc:
+            checks.append({"name": "adapter_build", "ok": False, "errors": [str(exc)]})
+
+    for filename in ("openclaw.example.json", "hermesagent.example.json", "codex.example.json", "opencode.example.json", "claude-code.example.json", "generic.example.json"):
         path = root / "profiles" / "capabilities" / filename
         try:
             result = probe(load_json(path))

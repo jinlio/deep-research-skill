@@ -13,18 +13,18 @@
 
 ## 安装和加载
 
-OpenClaw 从 workspace 的 `skills/` 目录发现包含 `SKILL.md` 的目录。推荐在一个受控 workspace 中安装：
+OpenClaw 从 workspace 的 `skills/` 目录发现包含 `SKILL.md` 的目录。先用 `python scripts/build_adapters.py --output dist` 生成 `dist/openclaw/deep-research/`，再安装这个完整包：
 
 ```bash
 mkdir -p <workspace>/skills/deep-research
-git clone --depth 1 https://git.luckyguo.dpdns.org/chengge/deep-research-skill.git <workspace>/skills/deep-research
+cp -R dist/openclaw/deep-research/. <workspace>/skills/deep-research/
 openclaw skills list
 ```
 
 也可以使用 OpenClaw 的本地安装入口：
 
 ```bash
-openclaw skills install ./deep-research-skill --as deep-research
+openclaw skills install ./dist/openclaw/deep-research --as deep-research
 ```
 
 确认名称为 `deep-research` 后，在新会话中使用 `/deep-research`，或显式要求 agent 加载该 skill。skill 内部用 `{baseDir}` 定位 `references/` 和 `scripts/`，不依赖固定用户目录。

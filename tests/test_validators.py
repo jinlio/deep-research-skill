@@ -14,6 +14,7 @@ from check_claim_coverage import check as check_coverage  # noqa: E402
 from check_clarification import check as check_clarification  # noqa: E402
 from check_run_manifest import check as check_manifest  # noqa: E402
 from check_sources import check as check_sources  # noqa: E402
+from build_adapters import RUNTIMES, build  # noqa: E402
 from evaluate_benchmark import evaluate  # noqa: E402
 from init_run import init_run  # noqa: E402
 from probe_runtime import probe  # noqa: E402
@@ -119,13 +120,13 @@ class ValidatorTests(unittest.TestCase):
     def test_all_capability_fixtures_are_valid(self) -> None:
         fixture_dir = ROOT / "profiles" / "capabilities"
         fixtures = sorted(fixture_dir.glob("*.example.json"))
-        self.assertGreaterEqual(len(fixtures), 5)
+        self.assertGreaterEqual(len(fixtures), 6)
         for path in fixtures:
             with self.subTest(fixture=path.name):
                 payload = json.loads(path.read_text(encoding="utf-8"))
                 result = probe(payload)
                 self.assertTrue(result["ok"], result)
-                self.assertIn(payload["runtime"], {"openclaw", "hermesagent", "codex", "opencode", "claude-code"})
+                self.assertIn(payload["runtime"], set(RUNTIMES))
 
     def test_capability_probe_reports_safe_degradation(self) -> None:
         payload = {"runtime": "generic", "capabilities": {"load_skill": True, "artifact_io": {"available": True, "append_only": True}}}
@@ -140,9 +141,20 @@ class ValidatorTests(unittest.TestCase):
 
     def test_skill_bundle_and_benchmark_fixture_pass(self) -> None:
         self.assertTrue(validate_skill(ROOT)["ok"])
+        self.assertTrue(validate_skill(ROOT / "core")["ok"])
         result = evaluate(ROOT / "benchmarks" / "cases", ROOT / "benchmarks" / "fixtures" / "reference_results.jsonl")
         self.assertTrue(result["ok"])
         self.assertEqual(result["aggregate_score"], 1.0)
+
+    def test_adapter_builds_self_contained_packages(self) -> None:
+        output = Path(self.temp.name) / "dist"
+        result = build(ROOT, output)
+        self.assertEqual(result["runtimes"], list(RUNTIMES))
+        for runtime in RUNTIMES:
+            package = output / runtime / "deep-research"
+            self.assertTrue(validate_skill(package)["ok"], runtime)
+            self.assertTrue((package / "references" / "workflow.md").exists())
+            self.assertTrue((package / "scripts" / "run_gates.py").exists())
 
 
 if __name__ == "__main__":

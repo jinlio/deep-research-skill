@@ -11,7 +11,7 @@ from common import write_result
 
 
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-REFERENCE_RE = re.compile(r"(?:(?:references|profiles|scripts|examples|templates)/[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*)")
+REFERENCE_RE = re.compile(r"(?:(?:core|references|profiles|scripts|examples|templates)/[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*)")
 
 
 def validate(root: Path) -> dict:
@@ -81,4 +81,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

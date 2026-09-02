@@ -2,6 +2,8 @@
 
 本文件记录 2026-09-02 在本机执行的最小 smoke test。`*.example.json` 是协议 fixture，不等同于黑盒通过；真实 runtime 结果按“通过 / 阻塞 / 未通过”区分。
 
+源码仓库中的 `core/` 和 `adapters/` 通过 `python scripts/build_adapters.py --output dist` 组装为完整安装包；`python scripts/test_runtime_matrix.py` 会在临时目录重复该过程并验证相对路径。
+
 | Runtime | 安装/版本 | 已验证 | 结果 | 边界 |
 |---|---|---|---|---|
 | Codex CLI | `codex-cli 0.151.0-alpha.7.2` | 读取 `SKILL.md`、`references/adapter-contract.md`，运行 `python scripts/validate_skill.py .` | 通过，退出码 0 | 本次未验证多 session delegation；当前 profile 默认串行降级 |

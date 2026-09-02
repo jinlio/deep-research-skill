@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-`v0.1.1` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
+`v0.2.0` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
 
 总体调研结论见 [`research_findings.md`](research_findings.md)，完整路线见 [`implementation_plan.md`](implementation_plan.md)，版本变更见 [`CHANGELOG.md`](CHANGELOG.md)。
 
@@ -19,11 +19,14 @@
 ## 目录
 
 ```text
-SKILL.md                  # 核心工作流入口
-references/               # 协议、证据、门禁和报告规则
+SKILL.md                  # 源码兼容入口
+core/SKILL.md             # 唯一核心工作流入口
+core/references/          # 协议、证据、门禁和报告规则
   agent-contracts.md      # 各研究角色的输入/输出契约
+adapters/<runtime>/       # 各 Agent 的薄入口（不复制核心逻辑）
 profiles/                 # 各 Agent runtime 的能力映射
 scripts/                  # 确定性检查与工件校验
+dist/                     # build_adapters.py 生成的可安装包（不提交）
 benchmarks/               # golden set 和评估用例
 tests/                    # 协议与门禁测试
 examples/                 # 最小可运行示例
@@ -55,7 +58,7 @@ python scripts/run_gates.py research-run --require-final --fail-on-pii
 
 ### OpenClaw
 
-将仓库放入 `<workspace>/skills/deep-research`，或运行 `openclaw skills install` 安装本地目录；新会话中使用 `/deep-research`。具体的 `sessions_spawn`、workspace、权限和恢复映射见 [`profiles/openclaw.md`](profiles/openclaw.md)。
+先运行 `python scripts/build_adapters.py --output dist`，再将 `dist/openclaw/deep-research` 放入 `<workspace>/skills/`，或用 `openclaw skills install` 安装该目录；新会话中使用 `/deep-research`。具体的 `sessions_spawn`、workspace、权限和恢复映射见 [`profiles/openclaw.md`](profiles/openclaw.md)。
 
 ### Codex
 
@@ -67,7 +70,17 @@ Codex CLI 可用 `codex exec --sandbox read-only` 做无副作用 smoke test；�
 
 ### HermesAgent
 
-将 skill 安装到 `~/.hermes/skills/`，然后在新会话中使用 `/deep-research`；启用 `web`、`file`、`delegation` toolset 后，可按子问题并行委派。具体映射见 [`profiles/hermesagent.md`](profiles/hermesagent.md)。
+将 `dist/hermesagent/deep-research` 安装到 `~/.hermes/skills/`，然后在新会话中使用 `/deep-research`；启用 `web`、`file`、`delegation` toolset 后，可按子问题并行委派。具体映射见 [`profiles/hermesagent.md`](profiles/hermesagent.md)。
+
+### 构建和验证适配包
+
+```bash
+python scripts/build_adapters.py --output dist
+python scripts/test_runtime_matrix.py
+python scripts/release_check.py
+```
+
+`dist/<runtime>/deep-research/` 是可复制到对应 Agent skill 目录的完整包；`dist/` 为构建产物，不提交到 Git。
 
 ### 能力探测与发布验收
 

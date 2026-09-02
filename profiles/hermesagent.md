@@ -12,10 +12,10 @@
 
 ## 安装和加载
 
-Hermes 将用户 skill 目录作为 source of truth，支持把整个目录安装到 `~/.hermes/skills/`：
+Hermes 将用户 skill 目录作为 source of truth。先用 `python scripts/build_adapters.py --output dist` 生成完整包，再安装 `dist/hermesagent/deep-research/`：
 
 ```bash
-hermes skills install https://git.luckyguo.dpdns.org/chengge/deep-research-skill/raw/branch/main/SKILL.md --name deep-research
+hermes skills install ./dist/hermesagent/deep-research --name deep-research
 hermes skills list
 ```
 
@@ -23,7 +23,7 @@ hermes skills list
 
 ```bash
 mkdir -p ~/.hermes/skills/deep-research
-git clone --depth 1 https://git.luckyguo.dpdns.org/chengge/deep-research-skill.git ~/.hermes/skills/deep-research
+cp -R dist/hermesagent/deep-research/. ~/.hermes/skills/deep-research/
 hermes skills list
 ```
 
