@@ -1,0 +1,14 @@
+{
+  "runtime": "codex",
+  "version": "example-not-runtime-tested",
+  "capabilities": {
+    "load_skill": {"available": true, "details": "project/workspace skill"},
+    "search": {"available": true, "mode": "host-provided", "read_only": true},
+    "read_source": {"available": true},
+    "delegate": {"available": false, "parallel": false},
+    "artifact_io": {"available": true, "append_only": true},
+    "checkpoint": {"available": true, "durable": false},
+    "audit": {"available": true}
+  },
+  "permissions": {"external_write_default": false}
+}

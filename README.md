@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-`v0.1.0` 发布候选版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent 适配指南、确定性质量门禁和 benchmark 骨架已就绪。
+`v0.1.1` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
 
 总体调研结论见 [`research_findings.md`](research_findings.md)，完整路线见 [`implementation_plan.md`](implementation_plan.md)，版本变更见 [`CHANGELOG.md`](CHANGELOG.md)。
 
@@ -56,6 +56,14 @@ python scripts/run_gates.py research-run --require-final --fail-on-pii
 ### OpenClaw
 
 将仓库放入 `<workspace>/skills/deep-research`，或运行 `openclaw skills install` 安装本地目录；新会话中使用 `/deep-research`。具体的 `sessions_spawn`、workspace、权限和恢复映射见 [`profiles/openclaw.md`](profiles/openclaw.md)。
+
+### Codex
+
+Codex CLI 可用 `codex exec --sandbox read-only` 做无副作用 smoke test；搜索能力按当前宿主配置映射，不假设固定 CLI 参数。具体映射见 `profiles/codex.md`。
+
+### OpenCode 与 Claude Code
+
+两者通过各自的项目 skill/instruction 目录加载同一 `SKILL.md`。由于不同发行版的 CLI 和 delegation API 不一致，先导出实际 capability JSON，再运行 `scripts/probe_runtime.py`；具体安全降级规则见 `profiles/opencode.md` 和 `profiles/claude-code.md`。
 
 ### HermesAgent
 

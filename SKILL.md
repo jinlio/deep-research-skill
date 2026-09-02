@@ -1,7 +1,7 @@
 ---
 name: deep-research
 description: 用于需要多来源、可核验、可审计的深度调研任务。先进行 N 轮需求澄清，再复用宿主 Agent 已有的搜索/浏览工具，按证据账本和质量门禁生成报告。
-version: 0.1.0
+version: 0.1.1
 license: MIT
 homepage: https://git.luckyguo.dpdns.org/chengge/deep-research-skill
 ---

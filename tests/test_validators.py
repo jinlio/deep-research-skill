@@ -116,6 +116,17 @@ class ValidatorTests(unittest.TestCase):
         self.assertTrue(result["ok"])
         self.assertEqual(result["mode"], "complete")
 
+    def test_all_capability_fixtures_are_valid(self) -> None:
+        fixture_dir = ROOT / "profiles" / "capabilities"
+        fixtures = sorted(fixture_dir.glob("*.example.json"))
+        self.assertGreaterEqual(len(fixtures), 5)
+        for path in fixtures:
+            with self.subTest(fixture=path.name):
+                payload = json.loads(path.read_text(encoding="utf-8"))
+                result = probe(payload)
+                self.assertTrue(result["ok"], result)
+                self.assertIn(payload["runtime"], {"openclaw", "hermesagent", "codex", "opencode", "claude-code"})
+
     def test_capability_probe_reports_safe_degradation(self) -> None:
         payload = {"runtime": "generic", "capabilities": {"load_skill": True, "artifact_io": {"available": True, "append_only": True}}}
         result = probe(payload)

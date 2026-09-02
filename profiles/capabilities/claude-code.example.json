@@ -1,0 +1,14 @@
+{
+  "runtime": "claude-code",
+  "version": "example-not-runtime-tested",
+  "capabilities": {
+    "load_skill": {"available": true, "details": "host-configured project instructions"},
+    "search": {"available": false},
+    "read_source": {"available": false},
+    "delegate": {"available": false, "parallel": false},
+    "artifact_io": {"available": true, "append_only": true},
+    "checkpoint": {"available": false, "durable": false},
+    "audit": {"available": true}
+  },
+  "permissions": {"external_write_default": false}
+}

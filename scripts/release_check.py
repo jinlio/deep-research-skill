@@ -27,7 +27,7 @@ def release_check(root: Path, run_dir: Path | None = None) -> dict:
     skill = validate(root)
     checks.append({"name": "skill_bundle", "ok": skill["ok"], "details": skill})
 
-    for filename in ("openclaw.example.json", "hermesagent.example.json"):
+    for filename in ("openclaw.example.json", "hermesagent.example.json", "codex.example.json", "opencode.example.json", "claude-code.example.json"):
         path = root / "profiles" / "capabilities" / filename
         try:
             result = probe(load_json(path))
@@ -60,4 +60,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
