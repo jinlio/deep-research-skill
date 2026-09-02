@@ -8,8 +8,14 @@
 - `check_sources`：URL、来源去重和失效状态。
 - `scan_sensitive_data`：secret/PII 扫描。
 - `check_run_manifest`：运行、重试、成本和恢复记录。
+- `probe_runtime`：验证 runtime capability JSON，并给出完整/降级模式。
+- `validate_skill`：验证 `SKILL.md` frontmatter、引用文件和路径安全。
+- `evaluate_benchmark`：对 golden cases 的 claim 覆盖、拒答和冲突召回做确定性评分。
+- `release_check`：一次性执行 skill、fixture、capability、benchmark 和单元测试验收。
 
 统一运行：`python scripts/run_gates.py <research-run> --require-final --fail-on-pii`
 
 创建新运行：`python scripts/init_run.py research-run --question "问题" --goal "决策目标"`
 创建后可先运行预检：`python scripts/run_gates.py research-run --preflight`
+
+运行时能力探测输入为 JSON，格式见 `profiles/capabilities/README.md`。探测只读取输入，不调用网络、不写 runtime 配置。

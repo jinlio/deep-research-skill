@@ -1,0 +1,8 @@
+{
+  "case_id": "ordinary-fact",
+  "category": "ordinary_fact",
+  "prompt": "一个普通事实问题，要求给出可复核的来源。",
+  "required_claim_ids": ["C-001"],
+  "must_abstain_claim_ids": [],
+  "expects_conflict": false
+}

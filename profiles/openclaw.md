@@ -1,9 +1,80 @@
 # OpenClaw Capability Profile
 
-此文件只描述 OpenClaw 到通用研究协议的映射，不复制研究逻辑。
+本 profile 对应 OpenClaw 官方 skill/sub-agent 文档（核对日期：2026-09-02）。它只把 OpenClaw 能力映射到通用协议，不改变研究规则。若本地版本的命令或工具名不同，以 `openclaw --help`、`openclaw skills list` 和当前会话暴露的工具为准，并在 capability JSON 中记录实际观察结果。
 
-通用映射契约见 [`references/adapter-contract.md`](../references/adapter-contract.md)。
+官方参考：
 
-适配时确认：skill 加载、子 Agent 委派、工作区工件传递、搜索/浏览工具、只读权限、checkpoint、结构化输出和运行日志。
+- [Skills](https://docs.openclaw.ai/tools/skills)
+- [Creating skills](https://docs.openclaw.ai/tools/creating-skills)
+- [Sub-agents](https://docs.openclaw.ai/tools/subagents)
+- [Skills config](https://docs.openclaw.ai/tools/skills-config)
+- [Sandboxing](https://docs.openclaw.ai/gateway/sandboxing)
+- [Permission modes](https://docs.openclaw.ai/tools/permission-modes)
 
-若某项能力不可用，使用 `references/workflow.md` 中的串行降级模式，并在 `run_manifest.json` 标记降级原因。
+## 安装和加载
+
+OpenClaw 从 workspace 的 `skills/` 目录发现包含 `SKILL.md` 的目录。推荐在一个受控 workspace 中安装：
+
+```bash
+mkdir -p <workspace>/skills/deep-research
+git clone --depth 1 https://git.luckyguo.dpdns.org/chengge/deep-research-skill.git <workspace>/skills/deep-research
+openclaw skills list
+```
+
+也可以使用 OpenClaw 的本地安装入口：
+
+```bash
+openclaw skills install ./deep-research-skill --as deep-research
+```
+
+确认名称为 `deep-research` 后，在新会话中使用 `/deep-research`，或显式要求 agent 加载该 skill。skill 内部用 `{baseDir}` 定位 `references/` 和 `scripts/`，不依赖固定用户目录。
+
+## 能力映射
+
+| 通用能力 | OpenClaw 典型实现 | 约束和验收 |
+|---|---|---|
+| `load_skill` | workspace `skills/`、`openclaw skills list`、skill 引用 | `SKILL.md` 和所有引用文件可读；新会话刷新 skill snapshot |
+| `search` | 当前 agent 暴露的 `web_search`、搜索插件或 MCP | 只复用当前会话已有工具；搜索摘要只能生成候选 source |
+| `read_source` | `web_fetch`、浏览器工具、用户提供的本地文件 | evidence 必须来自打开后的正文并带位置 |
+| `delegate` | `sessions_spawn`，每个独立子问题一个 `taskName` | 传入完整 task/context；子 Agent 只写自己的 packet，失败也要回传状态 |
+| `artifact_io` | workspace 文件工具或受控 `exec` 写入 `research-run/` | 仅允许 run 目录内追加/新建；原始 source 不覆盖 |
+| `checkpoint` | `run_manifest.json`、任务状态和保留的子 Agent 记录 | 重启后从最后一个完整 artifact 恢复；不重复覆盖 JSONL |
+| `audit` | `{baseDir}/scripts/run_gates.py` | 交付前必须 `--require-final --fail-on-pii` 通过 |
+
+典型 `sessions_spawn` 任务形状如下（字段以当前 OpenClaw 工具 schema 为准）：
+
+```json
+{
+  "taskName": "verify-q001",
+  "task": "读取指定 research-run 工件，逐 claim 提取可定位 evidence；不要写最终报告。",
+  "cwd": "<workspace>",
+  "runTimeoutSeconds": 1800,
+  "cleanup": "keep"
+}
+```
+
+`cwd` 应指向包含 run bundle 的 workspace；不要把私有材料放入公共或不受控 workspace。独立性要求来自研究计划：不同子 Agent 必须使用不同来源路径或检索入口，不能把子 Agent 数量当作证据数量。
+
+## 只读和权限边界
+
+研究默认是“外部只读、工作区受控写入”：允许读取公开网页和用户明确提供的材料，允许在 `research-run/` 中写入工件，但禁止发布、推送、发送消息或修改外部资源。需要运行校验脚本时，优先使用 allowlist 的 Python 命令；不需要命令执行时可把 `tools.exec.mode` 设为 `deny`。OpenClaw 的 skill allowlist 不是 shell 授权边界，必须同时检查 exec policy、sandbox 和凭据范围。
+
+建议验收：
+
+```bash
+openclaw skills list
+openclaw exec-policy show
+openclaw approvals get
+```
+
+若 runtime 无法提供 workspace 文件写入，切换到“会话内工件 + 结束前导出 run bundle”；若无 `sessions_spawn`，切换到串行阶段并在 manifest 写入 `delegation: unavailable`。
+
+## 恢复和失败处理
+
+每次阶段完成后更新 `run_manifest.json` 的 status、attempt、artifact hash 和 retrieval event。OpenClaw 子 Agent 的后台完成事件可能晚于当前 turn；收到 `failed`、超时或失联状态时，保留 packet 并将 claim 标记为 `unknown`/`insufficient`，不得当作没有发现问题。继续运行前先执行：
+
+```bash
+python <skill-root>/scripts/run_gates.py <workspace>/research-run --preflight
+```
+
+恢复时只重试缺失或失败的 task，使用幂等 task id；不要删除或改写已有 JSONL 记录。

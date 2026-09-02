@@ -1,0 +1,8 @@
+{
+  "case_id": "conflict",
+  "category": "conflict",
+  "prompt": "两个来源互相矛盾的问题，不能静默择一。",
+  "required_claim_ids": ["C-004"],
+  "must_abstain_claim_ids": [],
+  "expects_conflict": true
+}

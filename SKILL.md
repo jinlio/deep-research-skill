@@ -1,6 +1,9 @@
 ---
 name: deep-research
 description: 用于需要多来源、可核验、可审计的深度调研任务。先进行 N 轮需求澄清，再复用宿主 Agent 已有的搜索/浏览工具，按证据账本和质量门禁生成报告。
+version: 0.1.0
+license: MIT
+homepage: https://git.luckyguo.dpdns.org/chengge/deep-research-skill
 ---
 
 # Deep Research
@@ -17,3 +20,13 @@ description: 用于需要多来源、可核验、可审计的深度调研任务�
 4. 只使用宿主 Agent 已有工具；不得假设或安装特定搜索服务。
 5. 最终报告只能消费通过核验和反方审查的工件。
 6. 默认只读；任何远程写入或发布都需要用户明确授权。
+
+## 执行顺序
+
+1. 读取 `references/workflow.md`、当前 runtime profile 和 `references/adapter-contract.md`。
+2. 用宿主已有的 `search`/`web`/`browser` 工具做有限方向侦察（如需要），并记录为 `orientation_only`。
+3. 完成 `clarification_rounds`（默认 `auto`，通常 2 轮，最多 5 轮），得到用户确认的 `research_spec.yaml`。
+4. 按 Plan → Discover → Extract → Verify → Challenge → Synthesize → Audit 执行；每阶段只消费上一阶段通过门禁的工件。
+5. 使用 `{baseDir}/scripts/run_gates.py <run-dir> --require-final --fail-on-pii` 验收，通过后才交付 `final_report.md` 和完整 run bundle。
+
+没有子 Agent、结构化输出或持久 checkpoint 时，按照 profile 的降级路径串行执行；降级原因必须写入 `run_manifest.json`，不得假装完整模式。

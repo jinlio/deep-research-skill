@@ -375,3 +375,15 @@ reason: "两个独立来源支持，但存在时间限制"
 ## 十一、推荐的实际启动顺序
 
 先冻结协议和门禁，再做单 Agent 基线；单 Agent 的工件和质量检查稳定后，加入并行角色；最后才做 OpenClaw、HermesAgent 的 profile 和安装适配。这样平台变化只影响适配文件，不会反复重写研究方法和质量标准。
+
+## 十二、v0.1.0 发布验收状态
+
+本版本完成了可在没有特定 Agent runtime 的环境中复核的部分：
+
+- 协议、N 轮澄清、方向侦察隔离、证据账本、冲突和恢复规则已固化。
+- 串行降级与多 Agent 协作使用同一工件协议；OpenClaw、HermesAgent 和 generic profile 已提供安装/调用/权限/恢复映射。
+- `probe_runtime.py` 根据平台实际导出的 capability JSON 选择 `complete`、`serial-degraded` 或 `blocked`，不会从平台名称推断能力。
+- `validate_skill.py`、研究 run gates、四类 benchmark 和 `release_check.py` 可离线重复执行，CI 使用同一入口。
+- Gitea 与 GitHub 镜像的 tag/release 采用“先推 Gitea tag，再同步 GitHub，再创建 GitHub release”的顺序。
+
+本机未安装 `openclaw` 或 `hermes` 命令，因此平台黑盒安装、真实子 Agent 调用和 runtime 权限探测留作发布后的兼容性矩阵工作；仓库内的 capability JSON 明确标为协议 fixture，不冒充黑盒测试结果。

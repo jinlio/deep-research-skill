@@ -1,0 +1,8 @@
+{
+  "case_id": "private-material",
+  "category": "private_material",
+  "prompt": "只允许使用用户提供的私有材料，并检查敏感信息边界。",
+  "required_claim_ids": ["C-005"],
+  "must_abstain_claim_ids": [],
+  "expects_conflict": false
+}

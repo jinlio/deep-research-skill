@@ -14,9 +14,12 @@ from check_claim_coverage import check as check_coverage  # noqa: E402
 from check_clarification import check as check_clarification  # noqa: E402
 from check_run_manifest import check as check_manifest  # noqa: E402
 from check_sources import check as check_sources  # noqa: E402
+from evaluate_benchmark import evaluate  # noqa: E402
 from init_run import init_run  # noqa: E402
+from probe_runtime import probe  # noqa: E402
 from scan_sensitive_data import scan as scan_sensitive  # noqa: E402
 from validate_artifacts import validate  # noqa: E402
+from validate_skill import validate as validate_skill  # noqa: E402
 
 
 FIXTURE = ROOT / "examples" / "minimal" / "run"
@@ -98,6 +101,37 @@ class ValidatorTests(unittest.TestCase):
         self.assertTrue((target / "research_spec.yaml").exists())
         self.assertEqual(manifest["status"], "running")
         self.assertTrue(check_clarification(target, require_confirmation=False)["ok"])
+
+    def test_init_run_rejects_overwrite_and_escapes_yaml_text(self) -> None:
+        target = Path(self.temp.name) / "safe-run"
+        init_run(target, 'question with "quotes"\nand a newline', "goal", "standard")
+        with self.assertRaises(FileExistsError):
+            init_run(target, "replacement", "goal")
+        spec = (target / "research_spec.yaml").read_text(encoding="utf-8")
+        self.assertIn('question: "question with \\"quotes\\"\\nand a newline"', spec)
+
+    def test_capability_probe_accepts_complete_profile(self) -> None:
+        payload = json.loads((ROOT / "profiles" / "capabilities" / "openclaw.example.json").read_text(encoding="utf-8"))
+        result = probe(payload)
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["mode"], "complete")
+
+    def test_capability_probe_reports_safe_degradation(self) -> None:
+        payload = {"runtime": "generic", "capabilities": {"load_skill": True, "artifact_io": {"available": True, "append_only": True}}}
+        result = probe(payload)
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["mode"], "serial-degraded")
+        self.assertTrue(any(item["capability"] == "delegate" for item in result["degradations"]))
+
+    def test_capability_probe_blocks_external_write(self) -> None:
+        payload = {"runtime": "generic", "capabilities": {"load_skill": True, "artifact_io": {"available": True, "append_only": True}}, "permissions": {"external_write_default": True}}
+        self.assertFalse(probe(payload)["ok"])
+
+    def test_skill_bundle_and_benchmark_fixture_pass(self) -> None:
+        self.assertTrue(validate_skill(ROOT)["ok"])
+        result = evaluate(ROOT / "benchmarks" / "cases", ROOT / "benchmarks" / "fixtures" / "reference_results.jsonl")
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["aggregate_score"], 1.0)
 
 
 if __name__ == "__main__":

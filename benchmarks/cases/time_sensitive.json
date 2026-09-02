@@ -1,0 +1,8 @@
+{
+  "case_id": "time-sensitive",
+  "category": "time_sensitive",
+  "prompt": "一个有明确截至日期的时间敏感问题。",
+  "required_claim_ids": ["C-002"],
+  "must_abstain_claim_ids": ["C-003"],
+  "expects_conflict": false
+}
