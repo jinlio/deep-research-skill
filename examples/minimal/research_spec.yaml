@@ -1,0 +1,17 @@
+question: "示例研究问题"
+goal: "支持一个明确决策"
+scope:
+  time: "截至 2026-09-02"
+  geography: "待确认"
+  domain: "待确认"
+constraints:
+  budget: "standard"
+  deadline: "待确认"
+  privacy: "private"
+sources:
+  preferred: []
+  forbidden: []
+  user_materials: []
+clarification_rounds: auto
+depth: standard
+

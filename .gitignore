@@ -1,0 +1,23 @@
+# Research run outputs and local caches
+research-run/
+.research-cache/
+_sources/
+
+# Runtime and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python/tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
