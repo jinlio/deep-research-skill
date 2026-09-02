@@ -1,0 +1,3 @@
+{"evidence_id":"E-001","source_id":"S-001","quote":"The official source states the example definition and scope.","location":"section 1","supports_claim_ids":["C-001"],"refutes_claim_ids":[],"extracted_at":"2026-09-02T10:05:00Z"}
+{"evidence_id":"E-002","source_id":"S-002","quote":"The academic source reports the same definition and notes a limitation.","location":"page 2","supports_claim_ids":["C-001"],"refutes_claim_ids":["C-002"],"extracted_at":"2026-09-02T10:06:00Z"}
+

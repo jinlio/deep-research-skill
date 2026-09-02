@@ -19,6 +19,7 @@
 ```text
 SKILL.md                  # 核心工作流入口
 references/               # 协议、证据、门禁和报告规则
+  agent-contracts.md      # 各研究角色的输入/输出契约
 profiles/                 # 各 Agent runtime 的能力映射
 scripts/                  # 确定性检查与工件校验
 benchmarks/               # golden set 和评估用例
@@ -30,3 +31,19 @@ examples/                 # 最小可运行示例
 
 最终报告是派生物，`sources`、`evidence`、`claims` 和 `conflicts` 才是事实基础。没有证据时必须输出 `unknown` 或 `insufficient`，不能用流畅文字掩盖缺口。
 
+## 快速开始
+
+创建一个空的研究运行：
+
+```bash
+python scripts/init_run.py research-run --question "研究问题" --goal "支持的决策"
+python scripts/run_gates.py research-run --preflight
+```
+
+完成 N 轮澄清、来源登记和证据核验后，运行最终门禁：
+
+```bash
+python scripts/run_gates.py research-run --require-final --fail-on-pii
+```
+
+宿主 Agent 负责调用已有搜索工具和填写 JSONL 工件；本项目的脚本只负责确定性校验，不替代搜索或模型判断。

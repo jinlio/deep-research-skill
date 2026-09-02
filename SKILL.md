@@ -7,6 +7,8 @@ description: 用于需要多来源、可核验、可审计的深度调研任务�
 
 这是一个运行时无关的研究工作流。先阅读 `references/workflow.md`；运行时适配规则见 `profiles/`，工件字段见 `references/artifact-schema.md`。
 
+角色输入/输出契约见 `references/agent-contracts.md`；宿主 Agent 必须优先复用其已有搜索、浏览、文件和 MCP 工具。
+
 硬规则：
 
 1. 正式搜索前完成需求澄清和用户确认；方向侦察只能标记为 `orientation_only`。
@@ -15,4 +17,3 @@ description: 用于需要多来源、可核验、可审计的深度调研任务�
 4. 只使用宿主 Agent 已有工具；不得假设或安装特定搜索服务。
 5. 最终报告只能消费通过核验和反方审查的工件。
 6. 默认只读；任何远程写入或发布都需要用户明确授权。
-

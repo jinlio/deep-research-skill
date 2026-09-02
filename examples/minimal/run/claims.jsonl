@@ -1,0 +1,3 @@
+{"claim_id":"C-001","text":"示例对象具有已确认的定义和范围。","type":"fact","status":"supported","evidence_ids":["E-001","E-002"],"confidence":"high","scope":"本示例","as_of":"2026-09-02","reason":"两个独立来源一致支持。"}
+{"claim_id":"C-002","text":"示例对象没有任何已知限制。","type":"fact","status":"contradicted","evidence_ids":["E-002"],"confidence":"high","scope":"本示例","as_of":"2026-09-02","reason":"学术来源明确指出限制。"}
+

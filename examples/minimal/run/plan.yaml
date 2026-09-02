@@ -1,0 +1,14 @@
+question: "示例研究问题"
+subquestions:
+  - id: Q-001
+    text: "定义和基本事实是什么？"
+    paths: [official, academic]
+    agents: [discoverer, verifier]
+  - id: Q-002
+    text: "有哪些反方证据和限制？"
+    paths: [counterevidence]
+    agents: [challenger]
+stop_conditions:
+  - "所有高影响 claims 均有 evidence"
+  - "冲突已登记并处理"
+

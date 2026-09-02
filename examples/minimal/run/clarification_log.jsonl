@@ -1,0 +1,5 @@
+{"round":0,"kind":"understanding_echo","text":"当前理解：研究一个示例问题以支持决策；时间范围和证据标准待确认。"}
+{"round":1,"questions":["研究对象和时间范围是什么？","最终报告用于什么决策？"],"answers":["全球、截至 2026-09-02","支持一个明确决策"]}
+{"round":2,"questions":["是否优先使用官方和学术来源？","是否接受证据不足结论？"],"answers":["是","是，必须显式标记"]}
+{"round":2,"kind":"user_confirmation","confirmed":true}
+
