@@ -47,7 +47,7 @@ Skill 不把搜索摘要或 Agent 的记忆当作事实。每条重要结论都�
 
 总体调研结论见 [`research_findings.md`](research_findings.md)，完整路线见 [`implementation_plan.md`](implementation_plan.md)，版本变更见 [`CHANGELOG.md`](CHANGELOG.md)。
 
-当前仓库已用 15 个单元测试、runtime adapter matrix、四类 benchmark 和完整 run gates 验证。Codex CLI 的真实 smoke test 已通过；Claude Code 和 OpenCode 的环境限制与未完成项见 [`runtime_validation.md`](runtime_validation.md)。我们明确区分协议验证、runtime 启动验证和真实模型黑盒验证，不把 fixture 冒充成黑盒通过。
+当前仓库已用 15 个单元测试、runtime adapter matrix、四类 benchmark 和完整 run gates 验证。Codex CLI 的真实 smoke test 已通过；Claude Code 和 OpenCode 的环境限制与未完成项见 [`runtime_validation.md`](runtime_validation.md)，不把协议 fixture 冒充成黑盒通过。
 
 ## 设计原则
 
@@ -56,10 +56,6 @@ Skill 不把搜索摘要或 Agent 的记忆当作事实。每条重要结论都�
 - 每条重要结论都能回溯到带位置的原文证据。
 - 显式报告冲突、未知、证据不足、检索失败和停止原因。
 - 研究过程可恢复、可审计，默认只读并保护敏感信息。
-
-## 公开文档
-
-仓库中的文档按读者分层：README 介绍价值和使用方式，`runtime_validation.md` 记录可复核的兼容性结果，`research_findings.md` 和 `implementation_plan.md` 记录调研依据与工程取舍。公开文档只保留版本、能力、结果和限制，不包含账号、凭据、本机路径、provider 额度、代理地址或用户材料。
 
 ## 目录
 
