@@ -1,6 +1,45 @@
 # Deep Research Skill
 
-多 Agent 通用深度调研 skill：以研究规格、证据账本、独立审查和质量门禁为核心，复用宿主 Agent 已有的搜索、浏览、文件和 MCP 工具。
+> 让 Agent 先把问题问清楚，再用证据给出经得起追问的答案。
+
+Deep Research Skill 是一个跨 Agent 的深度调研工作流。它不绑定某个模型、搜索服务或平台，而是把需求澄清、证据管理、独立审查和质量门禁固化成可复用协议，运行在 OpenClaw、HermesAgent、Codex、OpenCode、Claude Code 以及 generic Agent 上。
+
+## 两个核心能力
+
+### 1. 先澄清，再搜索：避免一开始就答错问题
+
+大多数调研失败不是“搜不到”，而是研究目标没有被定义清楚。Skill 会在正式检索前进行可配置的 N 轮追问，确认：
+
+- 研究要支持什么决策，最终读者是谁
+- 范围、时间窗口、地域和术语边界是什么
+- 需要事实盘点、方案比较，还是风险判断
+- 什么证据标准才算足够，哪些结论必须保守表达
+
+早期方向侦察与正式证据严格隔离，用户确认后的 `research_spec.yaml` 才能启动正式研究。这样能显著减少“回答很完整，但答的不是我想问的”这一类返工。
+
+### 2. 证据优先：每个结论都能回到原文
+
+Skill 不把搜索摘要或 Agent 的记忆当作事实。每条重要结论都进入 `claim -> evidence -> source` 证据账本，并经过独立核验和反方挑战：
+
+- 记录原文片段、页码/段落或结构化字段，而不是只保存链接
+- 对冲突、未知、检索失败和证据不足显式标记，不用流畅文字掩盖缺口
+- 只有通过引用覆盖、来源一致性、隐私和 manifest 门禁的工件，才能生成最终报告
+- 多 Agent 并行时共享同一工件协议，避免子 Agent 只交一段无法复核的 prose
+
+最终交付的不只是 `final_report.md`，还包括可恢复、可审计的完整 run bundle。
+
+## 它解决什么痛点
+
+| 常见问题 | 结果 | Deep Research Skill 的做法 |
+|---|---|---|
+| 需求模糊就开始搜索 | 方向跑偏，反复返工 | N 轮澄清 + 用户确认后再检索 |
+| 只相信搜索摘要或模型记忆 | 引用无法核验，事实容易幻觉 | claim-evidence-source 账本 |
+| 多个 Agent 各自输出长文本 | 重复劳动，无法合并和追责 | 角色契约、结构化 packet、共享 run bundle |
+| 不同 Agent 的工具名和权限不同 | 换平台就要重写 skill | capability profile + 自动降级 |
+| 长任务中断或上下文丢失 | 进度无法恢复 | append-only 工件、manifest、checkpoint 规则 |
+| 为了“看起来完整”而隐藏缺口 | 读者误把未知当结论 | 冲突/unknown/insufficient 状态和最终门禁 |
+
+它解决的不是“再做一个搜索器”，而是把搜索、阅读、核验和写作组织成一条可检查的生产流程。
 
 ## 当前状态
 
@@ -8,7 +47,9 @@
 
 总体调研结论见 [`research_findings.md`](research_findings.md)，完整路线见 [`implementation_plan.md`](implementation_plan.md)，版本变更见 [`CHANGELOG.md`](CHANGELOG.md)。
 
-## 设计目标
+当前仓库已用 15 个单元测试、runtime adapter matrix、四类 benchmark 和完整 run gates 验证。Codex CLI 的真实 smoke test 已通过；Claude Code 和 OpenCode 的环境限制与未完成项见 [`runtime_validation.md`](runtime_validation.md)，不把协议 fixture 冒充成黑盒通过。
+
+## 设计原则
 
 - 先通过可配置的 N 轮追问确认研究需求，再开始正式检索。
 - 不绑定搜索服务或 Agent runtime；OpenClaw、HermesAgent、Codex、Claude Code 等通过 capability profile 适配。
@@ -38,6 +79,16 @@ examples/                 # 最小可运行示例
 最终报告是派生物，`sources`、`evidence`、`claims` 和 `conflicts` 才是事实基础。没有证据时必须输出 `unknown` 或 `insufficient`，不能用流畅文字掩盖缺口。
 
 ## 快速开始
+
+### 1. 生成对应 Agent 的安装包
+
+```bash
+python scripts/build_adapters.py --output dist
+```
+
+选择 `dist/<runtime>/deep-research/`，复制到对应 Agent 的 skill 目录。每个包都是自包含的，不需要再从源码仓库寻找 `references/` 或 `scripts/`。
+
+### 2. 创建一次研究运行
 
 创建一个空的研究运行：
 
