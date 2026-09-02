@@ -11,7 +11,7 @@
 
 - 增加 Codex、OpenCode 和 Claude Code runtime profile 与 capability fixture。
 - 增加五个平台 fixture 的统一 release 检查和单元测试覆盖。
-- 记录 Codex smoke、Claude Code 认证额度和 OpenCode Desktop skill discovery 的真实验证边界。
+- 记录 Codex smoke、Claude Code 模型调用限制和 OpenCode Desktop skill discovery 的真实验证边界。
 
 ## 0.1.0 - 2026-09-02
 
