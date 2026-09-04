@@ -1,7 +1,7 @@
 ---
 name: deep-research
-description: OpenClaw 深度调研 skill：把“搜了很多却答错问题”变成可复核结论。适合竞品、行业、方案选型、风险和资料研究；N 轮追问锁定目标，多来源原文核验，显式披露冲突与缺口，交付可审计报告和可恢复证据包。
-version: 0.2.4
+description: OpenClaw 纯工作流深度调研：不绑定模型或搜索服务，把宿主工具编排成可复核流程。适合竞品、行业、选型、风险和资料研究；N 轮追问、多来源原文核验、冲突披露，交付可审计报告和证据包。
+version: 0.2.5
 license: MIT
 homepage: https://github.com/jinlio/deep-research-skill
 ---

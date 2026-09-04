@@ -1,7 +1,7 @@
 ---
 name: deep-research
-description: 用于竞品、行业、方案选型、风险判断和学术/资料调研。先 N 轮追问明确决策目标，再复用宿主工具保存原文证据、核验冲突并通过质量门禁，交付可审计、可恢复的研究报告和证据包。
-version: 0.2.4
+description: 用于竞品、行业、方案选型、风险判断和学术/资料调研的纯工作流。复用宿主工具，先 N 轮追问明确目标，再保存原文证据、核验冲突并通过质量门禁，交付可审计、可恢复的报告和证据包。
+version: 0.2.5
 license: MIT
 homepage: https://github.com/jinlio/deep-research-skill
 ---

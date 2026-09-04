@@ -1,7 +1,7 @@
 ---
 name: deep-research
-description: 跨 OpenClaw、HermesAgent、Codex、OpenCode、Claude Code 的可审计深度调研：先 N 轮追问明确决策目标，再用多来源原文证据核验每条结论、标记冲突与未知，输出可恢复的研究报告和证据包。
-version: 0.2.4
+description: 跨 OpenClaw、HermesAgent、Codex、OpenCode、Claude Code 的纯工作流深度调研：不绑定模型或搜索服务，先 N 轮追问明确目标，再用多来源原文核验结论、标记冲突与未知，输出可恢复的报告和证据包。
+version: 0.2.5
 license: MIT
 homepage: https://github.com/jinlio/deep-research-skill
 ---

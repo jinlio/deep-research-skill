@@ -8,6 +8,19 @@ Deep Research Skill 是一个跨 Agent 的深度调研工作流。它适合竞�
 
 它不绑定某个模型、搜索服务或平台，已提供 OpenClaw、HermesAgent、Codex、OpenCode、Claude Code 和 generic Agent 适配入口。你可以把它当作 Agent 的“研究质量层”：保留现有工具，同时补上普通搜索流程最容易缺失的澄清、证据、审查和验收。
 
+## 为什么值得装
+
+| 亮点 | 具体收益 |
+|---|---|
+| **纯工作流** | 不内置搜索引擎、模型或 provider，不改变你的工具栈；换 Agent 只换薄适配入口，研究规则和工件协议保持一致。 |
+| **先问清楚再开工** | 用可配置的 N 轮追问确认决策目标、范围、时间窗和证据标准，减少“搜得很全但答非所问”的返工。 |
+| **结论和证据绑定** | 每条重要 claim 都回到带位置的原文 evidence 和 source，不把搜索摘要或模型记忆冒充事实。 |
+| **单 Agent / 多 Agent 都能跑** | 有委派能力时按角色拆分并行研究；没有委派、搜索或 checkpoint 时自动切换串行模式，并在 manifest 中说明降级原因。 |
+| **质量门禁可自动验收** | 用确定性脚本检查引用覆盖、来源独立性、冲突记录、隐私和路径安全；门禁不通过就阻止不完整报告交付。 |
+| **过程可恢复、结果可交接** | append-only run bundle 保留来源、证据、claims、冲突和状态，适合长任务、团队复核和中断后续跑。 |
+
+它不是“又一个搜索器”，而是一层可以叠加在现有 Agent 之上的研究方法：宿主负责提供能力，skill 负责把能力组织成可解释、可检查、可复用的流程。
+
 ## 适合谁
 
 - 需要为采购、产品、投资、架构或合规决策准备材料的人
@@ -70,7 +83,7 @@ Skill 不把搜索摘要或 Agent 的记忆当作事实。每条重要结论都�
 
 ## 当前状态
 
-`v0.2.4` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。OpenClaw/HermesAgent profile 已按 2026-09-02 上游文档补齐技能发现、toolset/权限边界、异步委派和恢复语义。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
+`v0.2.5` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。OpenClaw/HermesAgent profile 已按 2026-09-02 上游文档补齐技能发现、toolset/权限边界、异步委派和恢复语义。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
 
 总体调研结论见 [`research_findings.md`](research_findings.md)，完整路线见 [`implementation_plan.md`](implementation_plan.md)，版本变更见 [`CHANGELOG.md`](CHANGELOG.md)。
 
