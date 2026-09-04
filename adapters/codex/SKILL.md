@@ -1,9 +1,9 @@
 ---
 name: deep-research
 description: Codex 上的多来源、可核验、可审计深度调研工作流。
-version: 0.2.0
+version: 0.2.2
 license: MIT
-homepage: https://git.luckyguo.dpdns.org/chengge/deep-research-skill
+homepage: https://github.com/jinlio/deep-research-skill
 ---
 
 # Deep Research for Codex

@@ -14,6 +14,7 @@ _sources/
 Thumbs.db
 .vscode/
 .idea/
+.opencode/
 
 # Python/tool caches
 /dist/

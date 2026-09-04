@@ -4,7 +4,9 @@
   "capabilities": {
     "load_skill": {"available": true, "details": "host-configured project instructions"},
     "search": {"available": false},
-    "read_source": {"available": false},
+    "discover_sources": {"available": false, "tested": false, "details": "no host web search service"},
+    "fetch_source": {"available": true, "tested": false, "mode": "webfetch"},
+    "read_source": {"available": true, "tested": false, "mode": "file-backed/webfetch"},
     "delegate": {"available": false, "parallel": false},
     "artifact_io": {"available": true, "append_only": true},
     "checkpoint": {"available": false, "durable": false},

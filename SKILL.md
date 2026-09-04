@@ -1,9 +1,9 @@
 ---
 name: deep-research
 description: 多 Agent 通用深度调研 skill 的兼容入口；正式安装请使用 adapters 构建出的 runtime 包。
-version: 0.2.0
+version: 0.2.2
 license: MIT
-homepage: https://git.luckyguo.dpdns.org/chengge/deep-research-skill
+homepage: https://github.com/jinlio/deep-research-skill
 ---
 
 # Deep Research Compatibility Entry Point

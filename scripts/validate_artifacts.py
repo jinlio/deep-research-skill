@@ -85,6 +85,10 @@ def validate(run_dir: Path, require_final: bool = False) -> dict:
         errors.extend(require_fields(claim, ("claim_id", "text", "status", "evidence_ids"), f"claims[{index}]"))
         if claim.get("status") not in STATUSES:
             errors.append(f"claims[{index}]: invalid status '{claim.get('status')}'")
+        if "impact" in claim and claim.get("impact") not in {"low", "medium", "high"}:
+            errors.append(f"claims[{index}]: invalid impact '{claim.get('impact')}'")
+        if "minimum_evidence" in claim and (not isinstance(claim.get("minimum_evidence"), int) or claim.get("minimum_evidence") < 1):
+            errors.append(f"claims[{index}]: minimum_evidence must be a positive integer")
         refs = claim.get("evidence_ids")
         if not isinstance(refs, list):
             errors.append(f"claims[{index}]: evidence_ids must be an array")

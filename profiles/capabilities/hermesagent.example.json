@@ -3,12 +3,12 @@
   "version": "example-not-runtime-tested",
   "observed_at": "2026-09-02T00:00:00Z",
   "capabilities": {
-    "load_skill": {"available": true, "details": "~/.hermes/skills/"},
+    "load_skill": {"available": true, "details": "~/.hermes/skills plus trusted project and configured external dirs; skill_view loads supporting files"},
     "search": {"available": true, "mode": "host-provided", "read_only": true},
     "read_source": {"available": true},
-    "delegate": {"available": true, "parallel": true},
+    "delegate": {"available": true, "parallel": true, "details": "delegate_task goal/context or tasks batch; leaf children cannot delegate"},
     "artifact_io": {"available": true, "append_only": true},
-    "checkpoint": {"available": true, "durable": false},
+    "checkpoint": {"available": true, "durable": false, "details": "completed results may be persisted; running children become unknown after restart"},
     "audit": {"available": true}
   },
   "permissions": {"external_write_default": false}

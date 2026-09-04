@@ -42,6 +42,8 @@ def build(root: Path, output: Path) -> dict:
         for repo_only in ("build_adapters.py", "test_runtime_matrix.py", "release_check.py", "README.md"):
             (destination / "scripts" / repo_only).unlink(missing_ok=True)
         _copy_tree(root / "profiles", destination / "profiles")
+        if (root / "protocol").is_dir():
+            _copy_tree(root / "protocol", destination / "protocol")
         for filename in ("LICENSE", "SECURITY.md", "VERSION"):
             source = root / filename
             if source.is_file():

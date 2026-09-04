@@ -12,11 +12,16 @@ from common import load_jsonl, write_result
 
 def check(run_dir: Path, threshold: float = 1.0, require_final: bool = False, allow_empty: bool = False) -> dict:
     claims, errors = load_jsonl(run_dir / "claims.jsonl")
+    sources, source_errors = load_jsonl(run_dir / "sources.jsonl")
+    errors.extend(source_errors)
+    source_groups = {item.get("source_id"): item.get("independence_group") or item.get("source_id") for item in sources}
     evidence, evidence_errors = load_jsonl(run_dir / "evidence.jsonl")
     errors.extend(evidence_errors)
     evidence_ids = {item.get("evidence_id") for item in evidence}
     missing: list[str] = []
     invalid: list[str] = []
+    insufficient: list[str] = []
+    non_independent: list[str] = []
     eligible = 0
     for claim in claims:
         claim_id = claim.get("claim_id", "<missing>")
@@ -30,8 +35,20 @@ def check(run_dir: Path, threshold: float = 1.0, require_final: bool = False, al
                 missing.append(claim_id)
             if any(ref not in evidence_ids for ref in refs):
                 invalid.append(claim_id)
+            minimum = claim.get("minimum_evidence")
+            if not isinstance(minimum, int) or minimum < 1:
+                minimum = 2 if claim.get("impact") == "high" else 1
+            if len(refs) < minimum:
+                insufficient.append(claim_id)
+            if claim.get("impact") == "high" and len(refs) >= 2:
+                groups = set()
+                for evidence_item in evidence:
+                    if evidence_item.get("evidence_id") in refs:
+                        groups.add(evidence_item.get("independence_group") or source_groups.get(evidence_item.get("source_id")) or evidence_item.get("source_id"))
+                if len(groups) < 2:
+                    non_independent.append(claim_id)
     total = len(claims)
-    backed = eligible - len(set(missing + invalid))
+    backed = eligible - len(set(missing + invalid + insufficient + non_independent))
     coverage = backed / eligible if eligible else (1.0 if claims and not require_final else 0.0)
     report_path = run_dir / "final_report.md"
     report_claims: set[str] = set()
@@ -47,8 +64,8 @@ def check(run_dir: Path, threshold: float = 1.0, require_final: bool = False, al
     if not claims and allow_empty:
         ok = not errors
     else:
-        ok = not errors and not missing and not invalid and coverage >= threshold
-    return {"ok": ok, "coverage": round(coverage, 4), "threshold": threshold, "total_claims": total, "eligible_claims": eligible, "backed_claims": backed, "missing_evidence": sorted(set(missing)), "invalid_evidence_refs": sorted(set(invalid)), "unreferenced_claims": unreferenced, "errors": errors}
+        ok = not errors and not missing and not invalid and not insufficient and not non_independent and coverage >= threshold
+    return {"ok": ok, "coverage": round(coverage, 4), "threshold": threshold, "total_claims": total, "eligible_claims": eligible, "backed_claims": backed, "missing_evidence": sorted(set(missing)), "insufficient_evidence": sorted(set(insufficient)), "non_independent_evidence": sorted(set(non_independent)), "invalid_evidence_refs": sorted(set(invalid)), "unreferenced_claims": unreferenced, "errors": errors}
 
 
 def main() -> int:

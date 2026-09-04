@@ -1,5 +1,7 @@
 # Deep Research Skill
 
+[GitHub](https://github.com/jinlio/deep-research-skill) · [SkillHub](https://skills.palebluedot.live) · OpenClaw adapter via ClawHub
+
 > 让 Agent 先把问题问清楚，再用证据给出经得起追问的答案。
 
 Deep Research Skill 是一个跨 Agent 的深度调研工作流。它不绑定某个模型、搜索服务或平台，而是把需求澄清、证据管理、独立审查和质量门禁固化成可复用协议，运行在 OpenClaw、HermesAgent、Codex、OpenCode、Claude Code 以及 generic Agent 上。
@@ -43,11 +45,11 @@ Skill 不把搜索摘要或 Agent 的记忆当作事实。每条重要结论都�
 
 ## 当前状态
 
-`v0.2.0` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
+`v0.2.2` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。OpenClaw/HermesAgent profile 已按 2026-09-02 上游文档补齐技能发现、toolset/权限边界、异步委派和恢复语义。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
 
 总体调研结论见 [`research_findings.md`](research_findings.md)，完整路线见 [`implementation_plan.md`](implementation_plan.md)，版本变更见 [`CHANGELOG.md`](CHANGELOG.md)。
 
-当前仓库已用 15 个单元测试、runtime adapter matrix、四类 benchmark 和完整 run gates 验证。Codex CLI 的真实 smoke test 已通过；Claude Code 和 OpenCode 的环境限制与未完成项见 [`runtime_validation.md`](runtime_validation.md)。我们明确区分协议验证、runtime 启动验证和真实模型黑盒验证，不把 fixture 冒充成黑盒通过。
+当前仓库已用 15 个单元测试、runtime adapter matrix、四类 benchmark 和完整 run gates 验证。Codex CLI 与 OpenCode Desktop 的真实 smoke test 已通过；Claude Code 的环境限制及 OpenCode 的降级边界见 [`runtime_validation.md`](runtime_validation.md)。我们明确区分协议验证、runtime 启动验证和真实模型黑盒验证，不把 fixture 冒充成黑盒通过。
 
 ## 设计原则
 
@@ -114,6 +116,8 @@ python scripts/run_gates.py research-run --require-final --fail-on-pii
 ### OpenClaw
 
 先运行 `python scripts/build_adapters.py --output dist`，再将 `dist/openclaw/deep-research` 放入 `<workspace>/skills/`，或用 `openclaw skills install` 安装该目录；新会话中使用 `/deep-research`。具体的 `sessions_spawn`、workspace、权限和恢复映射见 [`profiles/openclaw.md`](profiles/openclaw.md)。
+
+发布到 ClawHub 后可直接使用 `clawhub install deep-research`；SkillHub 通过 GitHub 索引本仓库，收录完成后可使用 `npx skillhub install jinlio/deep-research-skill`。
 
 ### Codex
 

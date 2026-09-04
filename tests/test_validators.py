@@ -139,6 +139,41 @@ class ValidatorTests(unittest.TestCase):
         payload = {"runtime": "generic", "capabilities": {"load_skill": True, "artifact_io": {"available": True, "append_only": True}}, "permissions": {"external_write_default": True}}
         self.assertFalse(probe(payload)["ok"])
 
+    def test_capability_probe_splits_discovery_and_fetch(self) -> None:
+        payload = {
+            "runtime": "generic",
+            "capabilities": {
+                "load_skill": {"available": True, "tested": True, "evidence": ["skill-load"]},
+                "discover_sources": {"available": False, "tested": True, "evidence": ["no-search"]},
+                "fetch_source": {"available": True, "tested": True, "mode": "webfetch", "evidence": ["fetch-smoke"]},
+                "read_source": {"available": True, "tested": True, "evidence": ["read-smoke"]},
+                "artifact_io": {"available": True, "tested": True, "append_only": True},
+            },
+            "permissions": {"external_write_default": False},
+        }
+        result = probe(payload)
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["capabilities"]["fetch_source"]["mode"], "webfetch")
+        self.assertTrue(any(item["capability"] == "discover_sources" for item in result["degradations"]))
+
+    def test_high_impact_claim_requires_independent_sources(self) -> None:
+        claims_path = self.run_dir / "claims.jsonl"
+        claims = [json.loads(line) for line in claims_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        claims[0]["impact"] = "high"
+        claims[0]["evidence_ids"] = ["E-001", "E-002"]
+        claims_path.write_text("\n".join(json.dumps(item, ensure_ascii=False) for item in claims) + "\n", encoding="utf-8")
+        result = check_coverage(self.run_dir)
+        self.assertTrue(result["ok"])
+
+        evidence_path = self.run_dir / "evidence.jsonl"
+        evidence = [json.loads(line) for line in evidence_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        evidence[0]["independence_group"] = "example-institution"
+        evidence[1]["independence_group"] = "example-institution"
+        evidence_path.write_text("\n".join(json.dumps(item, ensure_ascii=False) for item in evidence) + "\n", encoding="utf-8")
+        result = check_coverage(self.run_dir)
+        self.assertFalse(result["ok"])
+        self.assertIn("C-001", result["non_independent_evidence"])
+
     def test_skill_bundle_and_benchmark_fixture_pass(self) -> None:
         self.assertTrue(validate_skill(ROOT)["ok"])
         self.assertTrue(validate_skill(ROOT / "core")["ok"])
@@ -155,6 +190,7 @@ class ValidatorTests(unittest.TestCase):
             self.assertTrue(validate_skill(package)["ok"], runtime)
             self.assertTrue((package / "references" / "workflow.md").exists())
             self.assertTrue((package / "scripts" / "run_gates.py").exists())
+            self.assertTrue((package / "protocol" / "capability.schema.json").exists())
 
 
 if __name__ == "__main__":

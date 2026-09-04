@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.2 - 2026-09-02
+
+- 扩展 capability 协议，区分 `discover_sources`、`fetch_source`、`read_source`，并记录 `available`、`tested`、`mode`、`evidence`。
+- 保留旧版 `search` 字段兼容映射，同时对未实际 smoke test 的能力给出警告。
+- 将高影响 claim 的最小证据数和独立来源组要求落实到 `check_claim_coverage.py` 门禁。
+- 补充 OpenCode 的多路径 discovery、on-demand 加载、权限过滤、last-wins 和无热重载边界。
+
+## 0.2.1 - 2026-09-02
+
+- 按 OpenClaw 上游文档补齐 workspace/project/personal/managed skill roots、allowlist、snapshot、ClawHub verify 和 `sessions_spawn` 完成事件语义。
+- 按 HermesAgent 上游文档补齐项目技能 trust、`skill_view` 渐进加载、platform disabled、toolset 继承和 `delegate_task` 单任务/批量/恢复边界。
+- 修正 OpenClaw/HermesAgent capability fixture 的说明，明确研究 bundle 与 runtime session state 的区别，不把协议 fixture 当作黑盒测试结果。
+- 完成 OpenCode Desktop `1.18.26` 真实运行验证：skill discovery、两轮澄清、完整研究流程和六项 gates 通过；记录无搜索服务、无并行委派、无 durable checkpoint 的降级边界。
+
 ## 0.2.0 - 2026-09-02
 
 - 将共享研究协议整理到 `core/`，为 OpenClaw、HermesAgent、Codex、OpenCode、Claude Code 和 generic 提供独立薄适配入口。

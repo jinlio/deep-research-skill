@@ -18,6 +18,8 @@ from common import load_json, write_result
 OPERATIONS = (
     "load_skill",
     "search",
+    "discover_sources",
+    "fetch_source",
     "read_source",
     "delegate",
     "artifact_io",
@@ -31,7 +33,10 @@ def _normalise(value: Any) -> tuple[bool, dict[str, Any]]:
     if isinstance(value, bool):
         return value, {"available": value}
     if isinstance(value, dict):
-        return value.get("available") is True, value
+        details = dict(value)
+        details.setdefault("tested", False)
+        details.setdefault("evidence", [])
+        return value.get("available") is True, details
     return False, {"available": False}
 
 
@@ -50,13 +55,29 @@ def probe(payload: dict[str, Any]) -> dict[str, Any]:
 
     normalized: dict[str, dict[str, Any]] = {}
     for operation in OPERATIONS:
-        available, details = _normalise(capabilities.get(operation))
+        raw = capabilities.get(operation)
+        # `search` was the pre-0.2.2 combined operation. Treat it as a
+        # compatibility declaration for source discovery and fetching when
+        # the more precise fields are absent.
+        if operation in {"discover_sources", "fetch_source"} and raw is None:
+            raw = capabilities.get("search")
+        available, details = _normalise(raw)
+        details.setdefault("tested", False)
+        details.setdefault("evidence", [])
+        if not isinstance(details.get("evidence"), list):
+            errors.append(f"{operation}.evidence must be an array")
+            details["evidence"] = []
+        if not isinstance(details.get("tested"), bool):
+            errors.append(f"{operation}.tested must be boolean")
+            details["tested"] = False
         normalized[operation] = {"available": available, **details}
         if operation in HARD_REQUIREMENTS and not available:
             errors.append(f"required capability unavailable: {operation}")
         elif not available:
             reason = {
                 "search": "use user-provided sources only; disclose coverage limits",
+                "discover_sources": "use user-provided URLs or a manually supplied source list",
+                "fetch_source": "retain source as pending/blocked; do not create evidence",
                 "read_source": "retain source as pending/blocked; do not create evidence",
                 "delegate": "run all stages serially in one agent",
                 "checkpoint": "export the run bundle at each stage; recovery is manual",
@@ -70,6 +91,10 @@ def probe(payload: dict[str, Any]) -> dict[str, Any]:
     if search["available"] and search.get("read_only") is False:
         errors.append("search capability must be read-only")
 
+    for operation in ("discover_sources", "fetch_source"):
+        if normalized[operation]["available"] and not normalized[operation].get("tested"):
+            warnings.append(f"{operation} is declared available but has no runtime test evidence")
+
     artifact = normalized["artifact_io"]
     if artifact["available"] and artifact.get("append_only") is False:
         errors.append("artifact_io must support append-only writes")
@@ -81,7 +106,8 @@ def probe(payload: dict[str, Any]) -> dict[str, Any]:
     if permissions.get("external_write_default") is True:
         errors.append("external_write_default must be false for the default research mode")
 
-    complete = not errors and all(normalized[name]["available"] for name in OPERATIONS)
+    required_for_complete = [name for name in OPERATIONS if not (name == "search" and ("discover_sources" in capabilities or "fetch_source" in capabilities))]
+    complete = not errors and all(normalized[name]["available"] for name in required_for_complete)
     mode = "complete" if complete else "serial-degraded" if not errors else "blocked"
     if not normalized["delegate"]["available"]:
         mode = "serial-degraded" if not errors else "blocked"
@@ -121,4 +147,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-
