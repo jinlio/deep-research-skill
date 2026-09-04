@@ -1,7 +1,7 @@
 ---
 name: deep-research
-description: 用于需要多来源、可核验、可审计的深度调研任务。先进行 N 轮需求澄清，再复用宿主 Agent 已有的搜索/浏览工具，按证据账本和质量门禁生成报告。
-version: 0.2.2
+description: 用于竞品、行业、方案比较、风险判断和学术/资料调研等需要多来源核验的任务。先进行 N 轮需求澄清，再复用宿主工具建立证据账本、处理冲突并通过质量门禁，生成可审计报告。
+version: 0.2.3
 license: MIT
 homepage: https://github.com/jinlio/deep-research-skill
 ---

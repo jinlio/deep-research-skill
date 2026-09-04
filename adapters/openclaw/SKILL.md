@@ -1,7 +1,7 @@
 ---
 name: deep-research
-description: OpenClaw 上的多来源、可核验、可审计深度调研工作流。
-version: 0.2.2
+description: OpenClaw 深度调研工作流：适合竞品、行业、方案比较、风险判断和资料研究。先 N 轮追问再检索，用多来源证据账本核验冲突，最后通过质量门禁交付可审计报告。
+version: 0.2.3
 license: MIT
 homepage: https://github.com/jinlio/deep-research-skill
 ---

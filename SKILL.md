@@ -1,7 +1,7 @@
 ---
 name: deep-research
-description: 多 Agent 通用深度调研 skill 的兼容入口；正式安装请使用 adapters 构建出的 runtime 包。
-version: 0.2.2
+description: 跨 OpenClaw、HermesAgent、Codex、OpenCode 和 Claude Code 的深度调研工作流：先用 N 轮追问锁定问题，再建立 claim-evidence-source 证据账本，交叉核验冲突并通过确定性质量门禁，输出可审计、可恢复的研究报告。
+version: 0.2.3
 license: MIT
 homepage: https://github.com/jinlio/deep-research-skill
 ---

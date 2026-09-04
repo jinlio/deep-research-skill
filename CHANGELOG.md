@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.3 - 2026-09-04
+
+- 重写各 runtime 入口 description，明确适用场景、核心差异和可审计交付结果，提升 marketplace 发现与转化。
+- 同步根入口和 README 的版本信息。
+
 ## 0.2.2 - 2026-09-02
 
 - 扩展 capability 协议，区分 `discover_sources`、`fetch_source`、`read_source`，并记录 `available`、`tested`、`mode`、`evidence`。
