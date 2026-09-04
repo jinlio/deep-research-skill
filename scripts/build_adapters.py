@@ -11,7 +11,12 @@ RUNTIMES = ("openclaw", "hermesagent", "codex", "opencode", "claude-code", "gene
 
 
 def _copy_tree(source: Path, destination: Path) -> None:
-    shutil.copytree(source, destination, dirs_exist_ok=True)
+    shutil.copytree(
+        source,
+        destination,
+        dirs_exist_ok=True,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".pytest_cache", ".ruff_cache"),
+    )
 
 
 def build(root: Path, output: Path) -> dict:
