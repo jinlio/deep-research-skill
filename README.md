@@ -2,9 +2,34 @@
 
 [GitHub](https://github.com/jinlio/deep-research-skill) · [SkillHub](https://skills.palebluedot.live) · OpenClaw adapter via ClawHub
 
-> 让 Agent 先把问题问清楚，再用证据给出经得起追问的答案。
+> 不只是搜索：把模糊问题变成经过追问、核验和审查的决策材料。
 
-Deep Research Skill 是一个跨 Agent 的深度调研工作流。它不绑定某个模型、搜索服务或平台，而是把需求澄清、证据管理、独立审查和质量门禁固化成可复用协议，运行在 OpenClaw、HermesAgent、Codex、OpenCode、Claude Code 以及 generic Agent 上。
+Deep Research Skill 是一个跨 Agent 的深度调研工作流。它适合竞品研究、行业扫描、方案选型、风险判断、资料整理和学术调研：先通过 N 轮追问把“真正要回答的问题”锁定，再调用宿主已有的搜索和浏览工具，逐条保存原文证据，处理冲突，最后交付一份读者可以复核、团队可以接力、任务中断后可以恢复的研究包。
+
+它不绑定某个模型、搜索服务或平台，已提供 OpenClaw、HermesAgent、Codex、OpenCode、Claude Code 和 generic Agent 适配入口。你可以把它当作 Agent 的“研究质量层”：保留现有工具，同时补上普通搜索流程最容易缺失的澄清、证据、审查和验收。
+
+## 适合谁
+
+- 需要为采购、产品、投资、架构或合规决策准备材料的人
+- 不满足于“看起来有引用”，需要能回到原文核对的人
+- 需要让多个 Agent 分工，却不想最后收到几段无法合并的长文本的团队
+- 需要在长任务中断后继续，而不是从头再搜一遍的人
+
+## 一次运行会留下什么
+
+你会得到的不只是最终答案，还包括一套可复核的研究工件：
+
+`final_report.md`：面向决策者的结论、范围、限制和建议
+
+`claims.jsonl`：每条结论的状态、影响级别和证据引用
+
+`evidence.jsonl`：原文摘录及页码、段落、时间戳等定位信息
+
+`sources.jsonl`：来源元数据、获取状态和独立性分组
+
+`conflicts.jsonl`：冲突、未知、检索失败和未解决问题
+
+质量门禁会在交付前检查引用覆盖、来源独立性、澄清确认、路径安全、敏感信息和运行 manifest；任一关键条件不满足，就要求补证据或明确降级，而不是用更长的文字掩盖缺口。
 
 ## 两个核心能力
 
@@ -45,11 +70,11 @@ Skill 不把搜索摘要或 Agent 的记忆当作事实。每条重要结论都�
 
 ## 当前状态
 
-`v0.2.3` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。OpenClaw/HermesAgent profile 已按 2026-09-02 上游文档补齐技能发现、toolset/权限边界、异步委派和恢复语义。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
+`v0.2.4` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。OpenClaw/HermesAgent profile 已按 2026-09-02 上游文档补齐技能发现、toolset/权限边界、异步委派和恢复语义。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
 
 总体调研结论见 [`research_findings.md`](research_findings.md)，完整路线见 [`implementation_plan.md`](implementation_plan.md)，版本变更见 [`CHANGELOG.md`](CHANGELOG.md)。
 
-当前仓库已用 15 个单元测试、runtime adapter matrix、四类 benchmark 和完整 run gates 验证。Codex CLI 与 OpenCode Desktop 的真实 smoke test 已通过；Claude Code 的环境限制及 OpenCode 的降级边界见 [`runtime_validation.md`](runtime_validation.md)。我们明确区分协议验证、runtime 启动验证和真实模型黑盒验证，不把 fixture 冒充成黑盒通过。
+当前仓库已用 17 个单元测试、runtime adapter matrix、四类 benchmark 和完整 run gates 验证。Codex CLI 与 OpenCode Desktop 的真实 smoke test 已通过；Claude Code 的环境限制及 OpenCode 的降级边界见 [`runtime_validation.md`](runtime_validation.md)。我们明确区分协议验证、runtime 启动验证和真实模型黑盒验证，不把 fixture 冒充成黑盒通过。
 
 ## 设计原则
 

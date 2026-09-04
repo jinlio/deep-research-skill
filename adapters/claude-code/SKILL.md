@@ -1,7 +1,7 @@
 ---
 name: deep-research
-description: Claude Code 深度调研工作流：适合竞品、行业、方案比较、风险判断和资料研究。先 N 轮追问再检索，用多来源证据账本核验冲突，最后通过质量门禁交付可审计报告。
-version: 0.2.3
+description: Claude Code 深度调研 skill：把“搜了很多却答错问题”变成可复核结论。适合竞品、行业、方案选型、风险和资料研究；N 轮追问锁定目标，多来源原文核验，显式披露冲突与缺口，交付可审计报告和可恢复证据包。
+version: 0.2.4
 license: MIT
 homepage: https://github.com/jinlio/deep-research-skill
 ---
