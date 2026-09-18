@@ -191,6 +191,8 @@ class ValidatorTests(unittest.TestCase):
             self.assertTrue((package / "references" / "workflow.md").exists())
             self.assertTrue((package / "scripts" / "run_gates.py").exists())
             self.assertTrue((package / "protocol" / "capability.schema.json").exists())
+            profiles = sorted(path.name for path in (package / "profiles").glob("*.md"))
+            self.assertEqual(profiles, [f"{runtime}.md"])
 
 
 if __name__ == "__main__":

@@ -83,7 +83,7 @@ Skill 不把搜索摘要或 Agent 的记忆当作事实。每条重要结论都�
 
 ## 当前状态
 
-`v0.2.5` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。OpenClaw/HermesAgent profile 已按 2026-09-02 上游文档补齐技能发现、toolset/权限边界、异步委派和恢复语义。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
+`v0.2.7` 发布版本。核心协议、串行/多 Agent 工作流、OpenClaw/HermesAgent/Codex/OpenCode/Claude Code 适配指南、确定性质量门禁和 benchmark 骨架已就绪。OpenClaw/HermesAgent profile 已按 2026-09-02 上游文档补齐技能发现、toolset/权限边界、异步委派和恢复语义。各 runtime 的真实测试边界见 [`runtime_validation.md`](runtime_validation.md)。
 
 总体调研结论见 [`research_findings.md`](research_findings.md)，完整路线见 [`implementation_plan.md`](implementation_plan.md)，版本变更见 [`CHANGELOG.md`](CHANGELOG.md)。
 
@@ -96,6 +96,7 @@ Skill 不把搜索摘要或 Agent 的记忆当作事实。每条重要结论都�
 - 每条重要结论都能回溯到带位置的原文证据。
 - 显式报告冲突、未知、证据不足、检索失败和停止原因。
 - 研究过程可恢复、可审计，默认只读并保护敏感信息。
+- Skill 不请求或修改权限、审批、沙箱、工具/网络配置或凭据；只使用当前会话已经授予的能力。
 
 ## 公开文档
 
