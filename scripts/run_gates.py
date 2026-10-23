@@ -14,6 +14,8 @@ def main() -> int:
     parser.add_argument("--require-final", action="store_true")
     parser.add_argument("--fail-on-pii", action="store_true")
     parser.add_argument("--preflight", action="store_true", help="allow an unconfirmed, empty run before formal research")
+    parser.add_argument("--verify-network", action="store_true", help="fetch sources and re-locate every evidence quote before gating")
+    parser.add_argument("--require-verified", action="store_true", help="gate on verification.jsonl: high-impact claims need located quotes")
     args = parser.parse_args()
     run_dir = args.run_dir.resolve()
     root = Path(__file__).resolve().parent
@@ -25,6 +27,10 @@ def main() -> int:
         [sys.executable, str(root / "check_run_manifest.py"), str(run_dir)],
         [sys.executable, str(root / "scan_sensitive_data.py"), str(run_dir)] + (["--fail-on-pii"] if args.fail_on_pii else []),
     ]
+    if args.verify_network:
+        commands.append([sys.executable, str(root / "verify_evidence.py"), str(run_dir)])
+    if args.require_verified:
+        commands.append([sys.executable, str(root / "verify_evidence.py"), str(run_dir), "--offline-check", "--require-verified"])
     failed = 0
     for command in commands:
         print(f"\n$ {' '.join(command)}")

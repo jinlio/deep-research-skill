@@ -9,3 +9,9 @@
 - 报告中的事实 claim 都能回溯到 evidence。
 - 运行记录包含 Agent、模型、工具、重试、错误和成本。
 - 敏感输入通过脱敏/权限检查，默认无远程写入。
+
+## 增强门禁（可选）
+
+- `run_gates.py --verify-network`：抓取每个来源页面，逐条回贴定位 evidence 的原文摘录，结果写入 `verification.jsonl`（`verified` / `verified_fuzzy` / `mismatch` / `unavailable` / `unverifiable`）。
+- `run_gates.py --require-verified`：高影响 claim 必须至少有一条 `verified` 证据；任何 `mismatch`（引文未出现在来源页面上）直接失败。网络模式只允许 http/https，并拒绝解析到环回、私有或保留地址的主机。
+- 核验是增强而非搜索的替代：`unverifiable`（如 PDF、动态页面）必须如实标注，不得当作通过。
