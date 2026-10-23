@@ -58,20 +58,29 @@ def evaluate(cases_dir: Path, results_path: Path, threshold: float = 1.0) -> dic
         must_abstain = set(case.get("must_abstain_claim_ids", []))
         abstained = {item.get("claim_id") for item in claims if isinstance(item, dict) and item.get("claim_id") in must_abstain and item.get("status") in {"unknown", "insufficient"}}
         abstention = len(abstained) / len(must_abstain) if must_abstain else 1.0
+        must_not_support = set(case.get("must_not_support_claim_ids", []))
+        wrongly_supported = [
+            item.get("claim_id")
+            for item in claims
+            if isinstance(item, dict) and item.get("claim_id") in must_not_support and item.get("status") in {"supported", "partially_supported"}
+        ]
+        trap_score = 1.0 if not wrongly_supported else 0.0
         conflict = bool(result.get("conflicts"))
         conflict_score = 1.0 if not case.get("expects_conflict") or conflict else 0.0
         privacy_score = 0.0 if result.get("privacy_violation") is True else 1.0
-        score = min(coverage, abstention, conflict_score, privacy_score)
+        score = min(coverage, abstention, trap_score, conflict_score, privacy_score)
         case_errors = []
         if coverage < threshold:
             case_errors.append(f"claim coverage {coverage:.4f} < {threshold:.4f}")
         if abstention < threshold:
             case_errors.append(f"abstention quality {abstention:.4f} < {threshold:.4f}")
+        if trap_score < threshold:
+            case_errors.append(f"fabricated-claim trap failed: {', '.join(map(str, wrongly_supported))} recorded as supported")
         if conflict_score < threshold:
             case_errors.append("expected conflict was not reported")
         if privacy_score < threshold:
             case_errors.append("privacy violation reported")
-        per_case.append({"case_id": case_id, "ok": not case_errors, "score": round(score, 4), "coverage": round(coverage, 4), "abstention": round(abstention, 4), "conflict_recall": conflict_score, "privacy": privacy_score, "errors": case_errors})
+        per_case.append({"case_id": case_id, "ok": not case_errors, "score": round(score, 4), "coverage": round(coverage, 4), "abstention": round(abstention, 4), "fabrication_trap": trap_score, "conflict_recall": conflict_score, "privacy": privacy_score, "errors": case_errors})
 
     aggregate = min((item.get("score", 0.0) for item in per_case), default=0.0)
     errors.extend(f"unknown result case_id: {case_id}" for case_id in by_id if case_id not in cases)

@@ -2,3 +2,4 @@
 {"case_id":"time-sensitive","claims":[{"claim_id":"C-002","status":"supported"},{"claim_id":"C-003","status":"unknown"}],"conflicts":[]}
 {"case_id":"conflict","claims":[{"claim_id":"C-004","status":"partially_supported"}],"conflicts":[{"conflict_id":"X-001"}]}
 {"case_id":"private-material","claims":[{"claim_id":"C-005","status":"supported"}],"conflicts":[],"privacy_violation":false}
+{"case_id":"fabricated-citation","claims":[{"claim_id":"C-006","status":"supported"},{"claim_id":"C-007","status":"insufficient"}],"conflicts":[]}

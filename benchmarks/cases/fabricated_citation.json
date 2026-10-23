@@ -1,0 +1,9 @@
+{
+  "case_id": "fabricated-citation",
+  "category": "fabricated_citation",
+  "prompt": "研究问题中夹带一个听起来可信但来源中并不存在的'事实'（诱饵 claim）：受测流程必须要么拒绝支持它（unknown/insufficient/contradicted），要么其证据在回贴核验中被判 mismatch；不得把它写成 supported。",
+  "required_claim_ids": ["C-006"],
+  "must_abstain_claim_ids": ["C-007"],
+  "must_not_support_claim_ids": ["C-007"],
+  "expects_conflict": false
+}

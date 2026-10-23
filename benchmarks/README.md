@@ -1,8 +1,6 @@
 # Benchmarks
 
-# Benchmarks
-
-golden set 覆盖普通事实、时间敏感、冲突来源和私有材料四类问题，并标注关键 claims、必要来源、反例、应拒答部分和隐私陷阱。
+golden set 覆盖普通事实、时间敏感、冲突来源、私有材料和**造假引文陷阱**五类问题，并标注关键 claims、必要来源、反例、应拒答部分和隐私陷阱。
 
 ## 文件协议
 
@@ -14,4 +12,4 @@ golden set 覆盖普通事实、时间敏感、冲突来源和私有材料四类
 python scripts/evaluate_benchmark.py benchmarks/cases benchmarks/fixtures/reference_results.jsonl
 ```
 
-评分不替代人工的 citation correctness 审查；它只对 claim 覆盖、unknown/insufficient 拒答、冲突召回和隐私标记做确定性回归检查。
+评分不替代人工的 citation correctness 审查；它只对 claim 覆盖、unknown/insufficient 拒答、**造假引文陷阱**（`must_not_support_claim_ids`）、冲突召回和隐私标记做确定性回归检查。引用回贴核验率由 `scripts/verify_evidence.py` 单独度量，汇总方法见 [RESULTS.md](RESULTS.md)。
