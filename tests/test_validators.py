@@ -85,6 +85,30 @@ class ValidatorTests(unittest.TestCase):
         self.assertFalse(result["ok"])
         self.assertFalse(result["confirmed"])
 
+    def test_quick_mode_allows_missing_question_round(self) -> None:
+        spec = self.run_dir / "research_spec.yaml"
+        spec.write_text(spec.read_text(encoding="utf-8").replace("depth: standard", "depth: quick").replace("clarification_rounds: 2", "clarification_rounds: auto"), encoding="utf-8")
+        log = self.run_dir / "clarification_log.jsonl"
+        records = [
+            {"round": 0, "kind": "understanding_echo", "text": "当前理解：按既有假设直接研究。"},
+            {"round": 0, "kind": "user_confirmation", "confirmed": True, "note": "start with current understanding"},
+        ]
+        log.write_text("\n".join(json.dumps(item, ensure_ascii=False) for item in records) + "\n", encoding="utf-8")
+        result = check_clarification(self.run_dir)
+        self.assertTrue(result["ok"], result["errors"])
+        self.assertEqual(result["depth"], "quick")
+
+    def test_standard_auto_limits_question_rounds(self) -> None:
+        spec = self.run_dir / "research_spec.yaml"
+        spec.write_text(spec.read_text(encoding="utf-8").replace("clarification_rounds: 2", "clarification_rounds: auto"), encoding="utf-8")
+        log = self.run_dir / "clarification_log.jsonl"
+        records = [json.loads(line) for line in log.read_text(encoding="utf-8").splitlines() if line.strip()]
+        records.append({"round": 3, "kind": "user_confirmation", "confirmed": True})
+        log.write_text("\n".join(json.dumps(item, ensure_ascii=False) for item in records) + "\n", encoding="utf-8")
+        result = check_clarification(self.run_dir)
+        self.assertFalse(result["ok"])
+        self.assertTrue(any("exceed configured limit" in item for item in result["errors"]))
+
     def test_orientation_material_cannot_enter_sources(self) -> None:
         path = self.run_dir / "sources.jsonl"
         lines = path.read_text(encoding="utf-8").splitlines()

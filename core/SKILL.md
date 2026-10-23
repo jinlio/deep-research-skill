@@ -25,7 +25,7 @@ homepage: https://github.com/jinlio/deep-research-skill
 
 1. 读取 `references/workflow.md`、当前 runtime profile 和 `references/adapter-contract.md`。
 2. 用宿主已有的来源发现/抓取/浏览工具做有限方向侦察（如需要），并记录为 `orientation_only`；不要把工具存在误认为 capability 已测试。
-3. 完成 `clarification_rounds`（默认 `auto`，通常 2 轮，最多 5 轮），得到用户确认的 `research_spec.yaml`。
+3. 按深度模式完成澄清并得到用户确认的 `research_spec.yaml`：`quick` 0 轮（假设写入规格并展示）、`standard` 1 轮、`deep` 2–3 轮；显式 `clarification_rounds: N` 优先。用户可随时说"按当前理解开始"提前结束。
 4. 按 Plan → Discover → Extract → Verify → Challenge → Synthesize → Audit 执行；每阶段只消费上一阶段通过门禁的工件。
 5. 使用适配包内置的 gate script，以 `--require-final --fail-on-pii` 验收，通过后才交付 `final_report.md` 和完整 run bundle。
 

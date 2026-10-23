@@ -10,11 +10,16 @@ from pathlib import Path
 from common import load_jsonl, write_result
 
 
-def _round_limit(spec_text: str) -> int | None:
+DEFAULT_LIMITS = {"quick": 1, "standard": 2, "deep": 5}
+
+
+def _spec_settings(spec_text: str) -> tuple[int | None, str]:
+    """Return (explicit round limit or None, depth mode)."""
     match = re.search(r"clarification_rounds\s*:\s*(auto|\d+)", spec_text, re.I)
-    if not match or match.group(1).lower() == "auto":
-        return 5
-    return int(match.group(1))
+    limit = None if (not match or match.group(1).lower() == "auto") else int(match.group(1))
+    depth_match = re.search(r"^depth\s*:\s*(quick|standard|deep)\s*$", spec_text, re.I | re.M)
+    depth = depth_match.group(1).lower() if depth_match else "standard"
+    return limit, depth
 
 
 def check(run_dir: Path, require_confirmation: bool = True) -> dict:
@@ -29,6 +34,7 @@ def check(run_dir: Path, require_confirmation: bool = True) -> dict:
         spec_text = spec_path.read_text(encoding="utf-8")
     records, parse_errors = load_jsonl(log_path)
     errors.extend(parse_errors)
+    explicit_limit, depth = _spec_settings(spec_text)
     if not records:
         errors.append("clarification_log.jsonl: at least one round is required")
     rounds: set[int] = set()
@@ -50,13 +56,15 @@ def check(run_dir: Path, require_confirmation: bool = True) -> dict:
     if not has_echo:
         errors.append("clarification_log.jsonl: missing understanding_echo")
     if not has_question_round:
-        if require_confirmation:
+        if depth == "quick":
+            warnings.append("clarification_log.jsonl: no question round; quick mode records assumptions in research_spec.yaml instead")
+        elif require_confirmation:
             errors.append("clarification_log.jsonl: missing a question round")
         else:
             warnings.append("clarification_log.jsonl: no question round yet; run is at the initial preflight state")
     if require_confirmation and not confirmed:
         errors.append("clarification_log.jsonl: missing final user confirmation")
-    limit = _round_limit(spec_text)
+    limit = explicit_limit if explicit_limit is not None else DEFAULT_LIMITS.get(depth, 5)
     if limit is not None and rounds and max(rounds) > limit:
         errors.append(f"clarification rounds exceed configured limit ({max(rounds)} > {limit})")
 
@@ -69,7 +77,7 @@ def check(run_dir: Path, require_confirmation: bool = True) -> dict:
     orientation_path = run_dir / "orientation_notes.md"
     if not orientation_path.exists():
         warnings.append("orientation_notes.md is absent; no orientation pass was recorded")
-    return {"ok": not errors, "rounds": sorted(rounds), "confirmed": confirmed, "max_rounds": limit, "errors": errors, "warnings": warnings}
+    return {"ok": not errors, "depth": depth, "rounds": sorted(rounds), "confirmed": confirmed, "max_rounds": limit, "errors": errors, "warnings": warnings}
 
 
 def main() -> int:
