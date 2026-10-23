@@ -1,0 +1,16 @@
+question: "For embedded analytics workloads (aggregations over millions of rows inside a desktop application), when is SQLite the right choice versus DuckDB?"
+goal: "Pick the default embedded store for an analytics feature and know the boundary conditions."
+scope:
+  time: "As of 2026-10-24"
+  geography: "Global"
+  domain: "embedded databases"
+constraints:
+  budget: "standard"
+  deadline: "2026-10-24"
+  privacy: "private"
+sources:
+  preferred: [official]
+  forbidden: []
+  user_materials: []
+clarification_rounds: 1
+depth: standard

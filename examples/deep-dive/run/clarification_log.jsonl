@@ -1,0 +1,3 @@
+{"round": 0, "kind": "understanding_echo", "text": "当前理解：为桌面应用内的嵌入式分析（百万行级聚合）在 SQLite 与 DuckDB 之间选默认存储，并明确各自的适用边界。"}
+{"round": 1, "kind": "clarification", "questions": ["分析查询的典型规模和数据更新频率是什么？", "证据标准：只用官方文档，还是需要第三方基准？", "默认引擎选错时的回退成本是否重要？"], "answers": ["单机、百万行级、低频批量更新", "先以官方文档定位边界，缺口如实标注", "重要，希望边界清晰可解释"]}
+{"round": 1, "kind": "user_confirmation", "confirmed": true, "text": "按当前规格开始。"}

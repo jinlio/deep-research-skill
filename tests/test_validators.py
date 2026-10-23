@@ -21,6 +21,7 @@ from probe_runtime import probe  # noqa: E402
 from scan_sensitive_data import scan as scan_sensitive  # noqa: E402
 from validate_artifacts import validate  # noqa: E402
 from validate_skill import validate as validate_skill  # noqa: E402
+from verify_evidence import verify_run as verify_offline  # noqa: E402
 
 
 FIXTURE = ROOT / "examples" / "minimal" / "run"
@@ -42,6 +43,15 @@ class ValidatorTests(unittest.TestCase):
         self.assertTrue(check_sources(self.run_dir)["ok"])
         self.assertTrue(check_manifest(self.run_dir)["ok"])
         self.assertTrue(scan_sensitive(self.run_dir)["ok"])
+
+    def test_deep_dive_example_passes_gates_with_verification(self) -> None:
+        run_dir = ROOT / "examples" / "deep-dive" / "run"
+        self.assertTrue(validate(run_dir, require_final=True)["ok"], validate(run_dir)["errors"])
+        self.assertTrue(check_clarification(run_dir)["ok"], check_clarification(run_dir)["errors"])
+        self.assertTrue(check_coverage(run_dir)["ok"], check_coverage(run_dir)["errors"])
+        result = verify_offline(run_dir)
+        self.assertTrue(result["ok"], result["errors"])
+        self.assertEqual(result["verified"].get("verified"), 7)
 
     def test_duplicate_source_fails(self) -> None:
         source_path = self.run_dir / "sources.jsonl"

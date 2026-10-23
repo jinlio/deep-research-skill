@@ -1,0 +1,34 @@
+{
+  "run_id": "run_20261024_sqlite-vs-duckdb",
+  "status": "completed",
+  "started_at": "2026-10-24T08:55:00Z",
+  "finished_at": "2026-10-24T09:15:00Z",
+  "clarification_rounds": 1,
+  "depth": "standard",
+  "tooling": {
+    "runtime": "manual (author-curated example)",
+    "search": "direct fetch of official documentation",
+    "model": "human-curated"
+  },
+  "attempts": [
+    {"stage": "clarify", "attempt": 1, "status": "completed"},
+    {"stage": "discover", "attempt": 1, "status": "completed", "note": "3 official pages registered"},
+    {"stage": "extract", "attempt": 1, "status": "completed", "note": "7 quotes with section locators"},
+    {"stage": "verify", "attempt": 1, "status": "completed", "note": "1 claim recorded as insufficient instead of guessed"},
+    {"stage": "challenge", "attempt": 1, "status": "completed", "note": "boundary tension recorded as CF-001"},
+    {"stage": "audit", "attempt": 1, "status": "completed", "note": "gates run with --require-final --require-verified"}
+  ],
+  "artifacts": [
+    {"path": "research_spec.yaml", "status": "complete"},
+    {"path": "plan.yaml", "status": "complete"},
+    {"path": "clarification_log.jsonl", "status": "complete"},
+    {"path": "orientation_notes.md", "status": "complete"},
+    {"path": "sources.jsonl", "status": "complete"},
+    {"path": "evidence.jsonl", "status": "complete"},
+    {"path": "claims.jsonl", "status": "complete"},
+    {"path": "conflicts.jsonl", "status": "complete"},
+    {"path": "verification.jsonl", "status": "complete"},
+    {"path": "run_manifest.json", "status": "complete"},
+    {"path": "final_report.md", "status": "complete"}
+  ]
+}

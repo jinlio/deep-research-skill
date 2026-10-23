@@ -1,0 +1,21 @@
+subquestions:
+  - id: Q-001
+    text: "How do SQLite and DuckDB each position their deployment model (in-process vs client/server)?"
+    claim_type: fact
+    source_paths: [official]
+    verification_path: "Quote both projects' own positioning pages."
+  - id: Q-002
+    text: "What workload does each project's documentation claim to target?"
+    claim_type: fact
+    source_paths: [official]
+    verification_path: "Quote the target-workload statements on both sides."
+  - id: Q-003
+    text: "Where is the decision boundary between the two for small-scale analytics?"
+    claim_type: fact
+    source_paths: [official, benchmark]
+    verification_path: "Expect the boundary to be underspecified by docs alone; record as insufficient unless comparative evidence is found."
+stop_conditions:
+  - "Official positioning of both engines is quoted with locators."
+  - "Any undecided boundary is recorded as insufficient, not smoothed over."
+adversarial_paths:
+  - "Check whether either project's docs overstate applicability (selection bias toward own engine)."
