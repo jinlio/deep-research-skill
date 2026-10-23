@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>run — research report</title><style>
+:root { --ink:#1a2233; --muted:#5b6472; --line:#e3e7ee; --bg:#ffffff; --pop:#101828; --ok:#0a7d4f; --warn:#9a6700; --bad:#b3261e; }
+* { box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', 'Noto Sans CJK SC', sans-serif; color: var(--ink); background: var(--bg); margin: 0; }
+main { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; line-height: 1.65; }
+h1 { font-size: 1.7rem; } h2 { margin-top: 2.2em; border-bottom: 1px solid var(--line); padding-bottom: .3em; }
+code { background: #f2f4f8; padding: .1em .35em; border-radius: 4px; font-size: .92em; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0; } th, td { border: 1px solid var(--line); padding: .45em .7em; text-align: left; }
+blockquote { border-left: 3px solid var(--line); margin: 0; padding-left: 1em; color: var(--muted); }
+.summary { color: var(--muted); font-size: .9rem; border: 1px solid var(--line); border-radius: 8px; padding: .6em .9em; margin: 1.2em 0; }
+.cite { position: relative; }
+.cite code { cursor: help; }
+.cite .pop { display: none; position: absolute; left: 0; top: 1.5em; z-index: 5; width: 26rem; max-width: 78vw;
+  background: var(--pop); color: #e8ecf3; border-radius: 10px; padding: .8em 1em; font-size: .82rem; line-height: 1.5;
+  box-shadow: 0 10px 30px rgba(8, 12, 24, .35); }
+.cite:hover .pop, .cite:focus-within .pop { display: block; }
+.cite .pop a { color: #9ec1ff; word-break: break-all; }
+.cite .ev { margin-top: .55em; border-top: 1px solid rgba(255,255,255,.14); padding-top: .45em; }
+.cite .ev-quote { font-style: italic; }
+.cite .ev-meta { color: #a7b0bf; font-size: .78rem; margin-top: .15em; }
+.badge { border-radius: 999px; padding: .05em .55em; font-size: .74rem; white-space: nowrap; }
+.badge.ok { background: rgba(16,185,129,.18); color: #34d399; }
+.badge.warn { background: rgba(234,179,8,.16); color: #fbbf24; }
+.badge.bad { background: rgba(239,68,68,.18); color: #f87171; }
+</style></head><body><main><div class="summary">Evidence chain: 7 verified</div><h2>SQLite vs DuckDB for Embedded Analytics</h2>
+<p>深度模式：<code>standard</code>（1 轮澄清 + 最终确认） · 运行时间：2026-10-24 · 核验：7/7 条证据已回贴原文（<code>verification.jsonl</code>）</p>
+<h3>结论</h3>
+<ul><li><span class="cite claim"><code>C-001</code><span class="pop"><b>C-001</b> · supported · impact high · confidence high<br>SQLite and DuckDB both position themselves as in-process, local data engines rather than client/server databases.<div class="evs"><div class="ev"><div class="ev-quote">“SQLite strives to provide local data storage for individual applications and devices. SQLite emphasizes economy, efficiency, reliability, independence, and simplicity.”</div><div class="ev-meta">Appropriate Uses For SQLite · Situations Where SQLite Works Well — introduction <span class="badge ok">✅ verified</span></div></div><div class="ev"><div class="ev-quote">“By default, DuckDB does not run as a separate process but is completely embedded within a host process.”</div><div class="ev-meta">Why DuckDB · Key Characteristics — Simple <span class="badge ok">✅ verified</span></div></div></div></span></span> <strong>两个项目都把自己定位为进程内本地引擎，而非 client/server 数据库</strong>（高影响，两个独立官方来源支持，置信度高）。</li><li><span class="cite claim"><code>C-002</code><span class="pop"><b>C-002</b> · supported · impact medium · confidence high<br>SQLite&#x27;s own documentation frames it as a local storage and application file format, explicitly not competing with server databases.<div class="evs"><div class="ev"><div class="ev-quote">“SQLite does not compete with client/server databases. SQLite competes with fopen().”</div><div class="ev-meta">Appropriate Uses For SQLite · Situations Where A Client/Server RDBMS May Work Better <span class="badge ok">✅ verified</span></div></div><div class="ev"><div class="ev-quote">“An SQLite database file with a defined schema often makes an excellent application file format.”</div><div class="ev-meta">SQLite As An Application File Format · 1. Executive Summary <span class="badge ok">✅ verified</span></div></div></div></span></span> SQLite 官方文档明确将其定位为本地存储与应用文件格式，&quot;SQLite does not compete with client/server databases. SQLite competes with fopen().&quot;（置信度高）。</li><li><span class="cite claim"><code>C-003</code><span class="pop"><b>C-003</b> · supported · impact medium · confidence high<br>DuckDB targets analytical workloads, ships with no external dependencies, and embeds in the host process.<div class="evs"><div class="ev"><div class="ev-quote">“DuckDB has no external dependencies, neither for compilation nor during run-time.”</div><div class="ev-meta">Why DuckDB · Key Characteristics — Simple <span class="badge ok">✅ verified</span></div></div><div class="ev"><div class="ev-quote">“For the analytical use cases that DuckDB targets, this has the additional advantage of high-speed data transfer to and from the database.”</div><div class="ev-meta">Why DuckDB · Key Characteristics — Simple <span class="badge ok">✅ verified</span></div></div></div></span></span> DuckDB 面向分析型负载、零外部依赖、完全内嵌于宿主进程（置信度高）。</li><li><span class="cite claim"><code>C-004</code><span class="pop"><b>C-004</b> · insufficient · impact high · confidence low<br>The exact boundary where analytical workloads should move from SQLite to DuckDB can be decided from official documentation alone.<div class="evs"><div class="ev"><div class="ev-quote">“For the analytical use cases that DuckDB targets, this has the additional advantage of high-speed data transfer to and from the database.”</div><div class="ev-meta">Why DuckDB · Key Characteristics — Simple <span class="badge ok">✅ verified</span></div></div><div class="ev"><div class="ev-quote">“Generally speaking, any site that gets fewer than 100K hits/day should work fine with SQLite.”</div><div class="ev-meta">Appropriate Uses For SQLite · Websites <span class="badge ok">✅ verified</span></div></div></div></span></span> <strong>仅凭官方文档无法划定两者在小规模分析负载上的边界</strong>——状态为 <code>insufficient</code>：双方文档描述的适用范围重叠（SQLite 称 10 万 hits/day 以下&quot;works fine&quot;，DuckDB 称分析型用例是其目标），但都没有给出对比基准数据（置信度低，见冲突 CF-001）。</li></ul>
+<h3>证据与冲突</h3>
+<p>每条结论都绑定带位置信息的原文摘录（见 <code>evidence.jsonl</code>）；来源为三个官方文档页（<code>sources.jsonl</code>，独立性分组 sqlite-org / duckdb-org）。C-004 的边界张力记录在 <code>conflicts.jsonl</code>（CF-001），处置方式是&quot;undecided&quot;，而不是择一断言。</p>
+<h3>交付建议</h3>
+<ul><li>默认嵌入式存储选型应先跑<strong>工作负载基准</strong>再定边界；文档共识只支持&quot;两者都是进程内引擎&quot;这一层结论。</li><li>引用核验：<code>python scripts/verify_evidence.py &lt;run_dir&gt;</code> 会重新抓取来源并逐条回贴本报告引用的原文摘录；本次运行 7 条全部 <code>verified</code>。</li></ul>
+<h3>限制</h3>
+<ul><li>未覆盖：第三方基准（如 CLICK-bench 类）、实际数据更新模式对 WAL/检查点行为的影响。</li><li>引文抓取于 2026-10-24；页面内容可能随时间变化，核验记录含 <code>content_sha256</code> 与时间戳。</li></ul></main></body></html>
