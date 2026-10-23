@@ -74,6 +74,21 @@ research-run/
 
 任何模式下都可以说"按当前理解开始"提前结束澄清；未决项会作为显式假设写入规格，不会静默猜测。
 
+## 引用核验：抓住造假引文的那一层
+
+结构性门禁能发现"缺引用"；`scripts/verify_evidence.py` 抓的是**错的引用**。它重新抓取每个被引用的来源页面，把每条证据摘录逐条回贴定位（有序分段 + 滑窗模糊匹配，标点/全半角归一化，CJK 友好），结果连同内容 hash 写入 `verification.jsonl`：
+
+| 状态 | 含义 |
+|---|---|
+| `verified` / `verified_fuzzy` | 摘录在页面上定位成功（精确 / 窗口相似度 ≥0.85） |
+| `mismatch` | 页面上找不到该摘录——引文造假或页面已变更 |
+| `unavailable` | 来源不可达（瞬时网络、404、500） |
+| `unverifiable` | 无可匹配对象（PDF、无 URL）——绝不当作通过 |
+
+严格模式下它是门禁：`run_gates.py <run> --require-final --require-verified` 会在高影响 claim 没有回贴成功的证据、或任何摘录 mismatch 时直接失败。网络抓取只走 http/https，并拒绝解析到环回/私有/保留地址的主机。
+
+**看实际效果：** [examples/deep-dive/](examples/deep-dive/README.md) 是一个完整真实运行（SQLite vs DuckDB）——三个官方文档的 7 条引文全部回贴 verified，争议边界诚实标注为 `insufficient`，并附[单文件 HTML 报告](examples/deep-dive/run/final_report.md)：悬浮引用即可看到原文摘录和核验徽标。
+
 ## 和同类方案的区别
 
 大多数 deep research skill 在优化"搜得更多"：并行 Agent、长报告、漂亮排版。这能提高覆盖，但文档化的核心失败——引用经不起核对——在那些技巧里原样存活。本项目优化的是**可核验性**：

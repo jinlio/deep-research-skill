@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.3.0 - 2026-10-24
+
+- 新增引用回贴核验引擎 `scripts/verify_evidence.py`：重新抓取来源并逐条定位 evidence 原文摘录，生成 `verification.jsonl`（verified / verified_fuzzy / mismatch / unavailable / unverifiable）；网络模式仅允许 http/https，拒绝解析到环回/私有/保留地址的主机；本地来源限定在 run 目录与工作目录内。
+- 门禁新增 `--verify-network` 与 `--require-verified`：高影响 claim 必须至少有一条回贴成功的证据，任何 mismatch 直接失败。
+- 落地深度模式：`quick`（0 轮澄清，假设显式入档）/ `standard`（1 轮）/ `deep`（2–3 轮）；`check_clarification.py` 按 depth 设默认轮次上限，显式 `clarification_rounds` 仍然优先。
+- 仓库根目录可直接作为 skill 安装（`npx skills add jinlio/deep-research-skill`）；新增 `.claude-plugin/marketplace.json` 支持 Claude Code 插件市场。
+- 新增 `scripts/render_report.py`：零依赖单文件 HTML 证据链报告，[C-xxx]/[S-xxx] 引用悬浮展示原文摘录与核验徽标；账本内容全部转义。
+- 新增真实示例 `examples/deep-dive/`（SQLite vs DuckDB）：三个官方来源、7 条证据全部 verified，边界结论诚实标注 insufficient；附回归测试。
+- benchmark 新增造假引文陷阱类 case 与 `must_not_support_claim_ids` 评分；新增 `benchmarks/RESULTS.md` 评测协议与指标定义（首跑前不填数字）。
+- 新增 `core/references/source-playbook.zh.md`（中文来源方法论）与 `domain-overlays.md`（医疗/金融/法律/市场证据标准收紧）。
+- CI：打 tag 自动构建并上传六套 runtime 安装包到 GitHub Release；新增每周兼容巡检。
+- 文档：英文主 README + 中文 README.zh-CN.md；OpenClaw/HermesAgent 转入维护模式。
+
 ## 0.2.7 - 2026-09-18
 
 - 进一步收紧 OpenClaw 运行时 profile：移出安装、配置和管理员诊断说明，运行时不得枚举或读取宿主设置。

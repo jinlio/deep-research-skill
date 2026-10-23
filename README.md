@@ -74,6 +74,21 @@ research-run/
 
 Any mode can be cut short by saying "start with your current understanding"; unresolved items become explicit assumptions in the spec, never silent guesses.
 
+## Citation verification: the part that catches fabricated quotes
+
+Structural gates catch missing citations; `scripts/verify_evidence.py` catches **wrong ones**. It re-fetches each cited source and re-locates every evidence quote on the live page (ordered-segment and windowed-fuzzy matching, punctuation/width folding, CJK-aware). Results land in `verification.jsonl` with content hashes:
+
+| status | meaning |
+|---|---|
+| `verified` / `verified_fuzzy` | quote located on the page (exact / ≥0.85 window ratio) |
+| `mismatch` | quote is not on the page — fabricated or the page changed |
+| `unavailable` | source unreachable (transient network, 404, 500) |
+| `unverifiable` | nothing to match against (PDF, no URL) — never treated as a pass |
+
+Strict mode makes it a gate: `run_gates.py <run> --require-final --require-verified` fails when a high-impact claim has no located quote, or any quote is a mismatch. The network fetcher speaks http/https only and refuses hosts resolving to loopback, private or reserved addresses.
+
+**See it working:** [examples/deep-dive/](examples/deep-dive/README.md) is a complete real run (SQLite vs DuckDB) — 7 quotes from three official docs all re-located, the contested boundary honestly recorded as `insufficient`, plus a [single-file HTML report](examples/deep-dive/run/final_report.md) where hovering a citation shows the original quote and its verification badge.
+
 ## How it compares
 
 Most deep-research skills optimize for **more searching**: parallel agents, long reports, pretty formatting. That helps coverage, but the documented failure — citations that don't check out — survives every one of those tricks. This project optimizes for **verifiability** instead:

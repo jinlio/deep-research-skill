@@ -1,7 +1,7 @@
 ---
 name: deep-research
 description: OpenCode 纯工作流深度调研：不绑定模型或搜索服务，把宿主工具编排成可复核流程。适合竞品、行业、选型、风险和资料研究；N 轮追问、多来源原文核验、冲突披露，交付可审计报告和证据包。
-version: 0.2.7
+version: 0.3.0
 license: MIT
 homepage: https://github.com/jinlio/deep-research-skill
 ---

@@ -1,7 +1,7 @@
 ---
 name: deep-research
 description: Evidence-first deep research: clarify goals, verify every claim against original sources, expose conflicts, deliver auditable reports. 深度调研：先澄清，再核验证据，可审计。
-version: 0.2.7
+version: 0.3.0
 license: MIT
 homepage: https://github.com/jinlio/deep-research-skill
 ---
