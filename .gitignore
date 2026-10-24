@@ -22,3 +22,6 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 .ruff_cache/
+
+# Local security-hook state (Mimosa) — never publish
+.mimosa/
