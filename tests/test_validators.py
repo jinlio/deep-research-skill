@@ -45,7 +45,10 @@ class ValidatorTests(unittest.TestCase):
         self.assertTrue(scan_sensitive(self.run_dir)["ok"])
 
     def test_deep_dive_example_passes_gates_with_verification(self) -> None:
-        run_dir = ROOT / "examples" / "deep-dive" / "run"
+        # Copy to temp: the tracked example's verification.jsonl keeps
+        # receiving appended passes from local hook-driven runs.
+        run_dir = Path(self.temp.name) / "deep-dive-run"
+        shutil.copytree(ROOT / "examples" / "deep-dive" / "run", run_dir)
         self.assertTrue(validate(run_dir, require_final=True)["ok"], validate(run_dir)["errors"])
         self.assertTrue(check_clarification(run_dir)["ok"], check_clarification(run_dir)["errors"])
         self.assertTrue(check_coverage(run_dir)["ok"], check_coverage(run_dir)["errors"])
